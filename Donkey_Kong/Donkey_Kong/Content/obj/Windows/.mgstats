@@ -1,0 +1,4 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Fonts/8-bit_SpriteFont.spritefont","C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/bin/Windows/Fonts/8-bit.xnb","FontDescriptionProcessor","SpriteFontContent",2009,70673,0,4764803
+"C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Fonts/8bit16.ttf","C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/bin/Windows\Fonts/8bit_Font.ttf","CopyItem","File",12964,12964,0,0049872
+"C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/Mario_Walking.png","C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/bin/Windows/Sprites/Mario_Walking.xnb","TextureProcessor","Texture2DContent",429,3157,0,0289233

@@ -41,7 +41,16 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Game1.cs" />
+    <Compile Include="Functions\Animation.cs" />
+    <Compile Include="Functions\CollisionManager.cs" />
+    <Compile Include="Functions\KeyMouseReader.cs" />
+    <Compile Include="Functions\ResourceManager.cs" />
+    <Compile Include="Functions\StringManager.cs" />
+    <Compile Include="Game\Enemy.cs" />
+    <Compile Include="Game\Game.cs" />
+    <Compile Include="Game\Level.cs" />
+    <Compile Include="Game\Player.cs" />
+    <Compile Include="Game\Tile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
