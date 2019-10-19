@@ -37,7 +37,7 @@ namespace Donkey_Kong
                     myTiles[x, y] = new Tile(
                         new Vector2(x * tempTileSize, (y + 1) * tempTileSize), 
                         new Point(tempTileSize));
-                    myTiles[x, y].TileType = myLevelBuilder[y].ElementAt(x);
+                    myTiles[x, y].TileType = myLevelBuilder[y][x];
                 }
             }
         }

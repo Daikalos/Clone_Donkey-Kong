@@ -16,6 +16,7 @@ namespace Donkey_Kong
             isWalking,
             isClimbing,
             isJumping,
+            isFalling,
             isDead
         }
 
@@ -26,6 +27,7 @@ namespace Donkey_Kong
         Animation myWalkingAnimation;
 
         Point mySize;
+        Rectangle myBoundingBox;
         float 
             mySpeed,
             myVelocity,
@@ -49,6 +51,8 @@ namespace Donkey_Kong
 
         public void Update(GameTime aGameTime, Tile[,] someTiles)
         {
+            myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
+
             switch (myPlayerState)
             {
                 case PlayerState.isWalking:
@@ -73,6 +77,10 @@ namespace Donkey_Kong
                         }
                     }
                     break;
+                case PlayerState.isFalling:
+                    myVelocity += myGravity;
+                    myPosition.Y += myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    break;
                 case PlayerState.isDead:
 
                     break;
@@ -82,7 +90,17 @@ namespace Donkey_Kong
             {
                 for (int j = 0; j < someTiles.GetLength(1); j++)
                 {
+                    if (myBoundingBox.Intersects(someTiles[i, j].BoundingBox) && someTiles[i, j].TileType == '#')
+                    {
+                        myVelocity = 0;
 
+                        myPlayerState = PlayerState.isWalking;
+                        SetTexture("Mario_Walking");
+                    }
+                    else if (myVelocity == 0)
+                    {
+                        myPlayerState = PlayerState.isFalling;
+                    }
                 }
             }
         }
@@ -107,6 +125,9 @@ namespace Donkey_Kong
 
                     break;
                 case PlayerState.isJumping:
+                    aSpriteBatch.Draw(myTexture, new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y), null, Color.White, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
+                    break;
+                case PlayerState.isFalling:
                     aSpriteBatch.Draw(myTexture, new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y), null, Color.White, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
                     break;
                 case PlayerState.isDead:

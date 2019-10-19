@@ -23,11 +23,15 @@ namespace Donkey_Kong
             set => myTileType = value;
         }
 
+        public Rectangle BoundingBox
+        {
+            get => myBoundingBox;
+        }
+
         public Tile(Vector2 aPosition, Point aSize)
         {
             this.myPosition = aPosition;
             this.mySize = aSize;
-
             this.myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, aSize.X, aSize.Y);
         }
 
