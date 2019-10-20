@@ -17,6 +17,13 @@ namespace Donkey_Kong
         Point mySize;
         char myTileType;
 
+        /// <summary>
+        /// # = Block; 
+        /// @ = Ladder;
+        /// # = BridgeLadder;
+        /// ? = Pins; 
+        /// . = Empty;
+        /// </summary>
         public char TileType
         {
             get => myTileType;

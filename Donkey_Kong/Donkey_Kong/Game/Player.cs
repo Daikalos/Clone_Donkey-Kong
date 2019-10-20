@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -11,7 +6,7 @@ namespace Donkey_Kong
 {
     class Player
     {
-        enum PlayerState
+        private enum PlayerState
         {
             isWalking,
             isClimbing,
@@ -20,21 +15,23 @@ namespace Donkey_Kong
             isDead
         }
 
-        Texture2D myTexture;
-        Vector2 myPosition;
-        PlayerState myPlayerState;
+        private Texture2D myTexture;
+        private Vector2 myPosition;
+        private PlayerState myPlayerState;
 
-        Animation myWalkingAnimation;
+        private Animation myWalkingAnimation;
 
-        Point mySize;
-        Rectangle myBoundingBox;
-        float 
+        private Point mySize;
+        private Rectangle myBoundingBox;
+        private SpriteEffects myFlipSprite;
+        private float
             mySpeed,
             myVelocity,
             myGravity,
             myJumpHeight;
-        bool myIsMoving;
-        SpriteEffects myFlipSprite;
+        private bool
+            myIsMoving,
+            myJumpAvailable;
 
         public Player(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aJumpHeight)
         {
@@ -44,9 +41,10 @@ namespace Donkey_Kong
             this.myGravity = aGravity;
             this.myJumpHeight = aJumpHeight;
 
-            myIsMoving = false;
-            myWalkingAnimation = new Animation();
-            myPlayerState = PlayerState.isWalking;
+            this.myIsMoving = false;
+            this.myJumpAvailable = true;
+            this.myWalkingAnimation = new Animation();
+            this.myPlayerState = PlayerState.isFalling;
         }
 
         public void Update(GameTime aGameTime, Tile[,] someTiles)
@@ -69,11 +67,11 @@ namespace Donkey_Kong
                     {
                         if (myFlipSprite == SpriteEffects.FlipHorizontally)
                         {
-                            myPosition.X -= mySpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds * 0.7f;
+                            myPosition.X -= mySpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds * 0.6f;
                         }
                         else
                         {
-                            myPosition.X += mySpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds * 0.7f;
+                            myPosition.X += mySpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds * 0.6f;
                         }
                     }
                     break;
@@ -86,23 +84,7 @@ namespace Donkey_Kong
                     break;
             }
 
-            for (int i = 0; i < someTiles.GetLength(0); i++)
-            {
-                for (int j = 0; j < someTiles.GetLength(1); j++)
-                {
-                    if (myBoundingBox.Intersects(someTiles[i, j].BoundingBox) && someTiles[i, j].TileType == '#')
-                    {
-                        myVelocity = 0;
-
-                        myPlayerState = PlayerState.isWalking;
-                        SetTexture("Mario_Walking");
-                    }
-                    else if (myVelocity == 0)
-                    {
-                        myPlayerState = PlayerState.isFalling;
-                    }
-                }
-            }
+            CollisionChecking(someTiles);
         }
 
         public void Draw(SpriteBatch aSpriteBatch, GameTime aGameTime)
@@ -112,12 +94,12 @@ namespace Donkey_Kong
                 case PlayerState.isWalking:
                     if (myIsMoving)
                     {
-                        myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, myTexture.Width / 3, myTexture.Height, mySize.X, mySize.Y, 3, 1, 0.1f, myFlipSprite, true);
+                        myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, myTexture.Width / 3, myTexture.Height, mySize.X, mySize.Y, 3, 1, 0.035f, myFlipSprite, true);
                     }
                     else
                     {
-                        aSpriteBatch.Draw(myTexture, 
-                            new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y), 
+                        aSpriteBatch.Draw(myTexture,
+                            new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y),
                             new Rectangle(16, 0, myTexture.Width / 3, myTexture.Height), Color.White, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
                     }
                     break;
@@ -157,12 +139,82 @@ namespace Donkey_Kong
                 myIsMoving = false;
             }
 
-            if (KeyMouseReader.KeyPressed(Keys.Space))
+            if (KeyMouseReader.KeyPressed(Keys.Space) && myJumpAvailable)
             {
                 myPlayerState = PlayerState.isJumping;
                 myVelocity = myJumpHeight;
+                myJumpAvailable = false;
 
                 SetTexture("Mario_Jumping");
+            }
+        }
+
+        private void CollisionChecking(Tile[,] someTiles)
+        {
+            IsFalling(someTiles);
+            Collision(someTiles);
+        }
+        private void IsFalling(Tile[,] someTiles)
+        {
+            bool tempNoCollisionFound = false;
+            bool tempBreakLoop = false;
+            for (int i = 0; i < someTiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < someTiles.GetLength(1); j++)
+                {
+                    if (someTiles[i, j].TileType == '#' || someTiles[i, j].TileType == '%')
+                    {
+                        Rectangle tempCollisionRect = new Rectangle((int)myPosition.X, (int)myPosition.Y + mySize.Y, mySize.X, mySize.Y / 6); //Custom hitbox for checking below
+                        if (!tempCollisionRect.Intersects(someTiles[i, j].BoundingBox))
+                        {
+                            tempNoCollisionFound = true;
+                        }
+                        else
+                        {
+                            tempNoCollisionFound = false;
+                            tempBreakLoop = true;
+                            break;
+                        }
+                    }
+                }
+                if (tempBreakLoop)
+                {
+                    break;
+                }
+            }
+            if (tempNoCollisionFound && myPlayerState != PlayerState.isJumping)
+            {
+                myPlayerState = PlayerState.isFalling;
+                SetTexture("Mario_Jumping");
+            }
+        }
+        private void Collision(Tile[,] someTiles)
+        {
+            for (int i = 0; i < someTiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < someTiles.GetLength(1); j++)
+                {
+                    if (myBoundingBox.Intersects(someTiles[i, j].BoundingBox))
+                    {
+                        if (someTiles[i, j].TileType == '#' || someTiles[i, j].TileType == '%')
+                        {
+                            Rectangle tempIntersection = Rectangle.Intersect(myBoundingBox, someTiles[i, j].BoundingBox);
+                            if (tempIntersection.Y == someTiles[i, j].BoundingBox.Y && tempIntersection.Width >= tempIntersection.Height) //Top
+                            {
+                                myVelocity = 0;
+                                myPosition.Y = someTiles[i, j].BoundingBox.Y - myBoundingBox.Height;
+                                myJumpAvailable = true;
+
+                                myPlayerState = PlayerState.isWalking;
+                                SetTexture("Mario_Walking");
+                            }
+                        }
+                        if (someTiles[i, j].TileType == '@' && KeyMouseReader.KeyPressed(Keys.Up))
+                        {
+                            myPlayerState = PlayerState.isClimbing;
+                        }
+                    }
+                }
             }
         }
 
