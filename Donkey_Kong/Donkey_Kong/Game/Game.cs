@@ -40,7 +40,7 @@ namespace Donkey_Kong
             ResourceManager.Initialize();
             myGameState = GameState.isPlaying;
 
-            myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 720), new Point(80, 40), 170.0f, 120.0f, 7.8f, -200.0f);
+            myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 60), new Point(40, 40), 170.0f, 120.0f, 7.8f, -200.0f);
             myLevel = new Level(@"../../../../Levels/Level01.txt");
 
             base.Initialize();
@@ -57,7 +57,7 @@ namespace Donkey_Kong
             ResourceManager.AddTexture("BridgeLadder", this.Content.Load<Texture2D>("Sprites/bridgeLadder"));
             ResourceManager.AddTexture("Empty", this.Content.Load<Texture2D>("Sprites/empty"));
             ResourceManager.AddTexture("Pole", this.Content.Load<Texture2D>("Sprites/pole"));
-            ResourceManager.AddFont("8-bit_Font", this.Content.Load<SpriteFont>("Fonts/8-bit"));
+            ResourceManager.AddFont("8-bit", this.Content.Load<SpriteFont>("Fonts/8-bit"));
 
             myPlayer.SetTexture("Mario_Walking");
             myLevel.SetTileTexture();
