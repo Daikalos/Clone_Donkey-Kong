@@ -40,7 +40,7 @@ namespace Donkey_Kong
             ResourceManager.Initialize();
             myGameState = GameState.isPlaying;
 
-            myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 720), new Point(64, 48), 170.0f, 7.8f, -200.0f);
+            myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 720), new Point(80, 40), 170.0f, 120.0f, 7.8f, -200.0f);
             myLevel = new Level(@"../../../../Levels/Level01.txt");
 
             base.Initialize();
@@ -78,7 +78,7 @@ namespace Donkey_Kong
 
                     break;
                 case GameState.isPlaying:
-                    myPlayer.Update(gameTime, myLevel.Tiles);
+                    myPlayer.Update(Window, gameTime, myLevel);
                     myLevel.Update();
                     break;
                 case GameState.isPaused:

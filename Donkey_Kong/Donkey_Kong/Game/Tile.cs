@@ -35,6 +35,11 @@ namespace Donkey_Kong
             get => myBoundingBox;
         }
 
+        public Vector2 Position
+        {
+            get => myPosition;
+        }
+
         public Tile(Vector2 aPosition, Point aSize)
         {
             this.myPosition = aPosition;

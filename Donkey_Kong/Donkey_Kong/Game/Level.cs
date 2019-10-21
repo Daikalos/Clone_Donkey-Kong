@@ -20,6 +20,11 @@ namespace Donkey_Kong
             get => myTiles;
         }
 
+        public Tile GetTileAtPos(Vector2 aPos)
+        {
+            return myTiles[(int)aPos.X / 40, (int)aPos.Y / 40];
+        }
+
         public Level(string aFilePath)
         {
             myLevelBuilder = File.ReadAllLines(aFilePath);

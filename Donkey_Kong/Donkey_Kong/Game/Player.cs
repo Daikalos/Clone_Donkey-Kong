@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -16,7 +17,10 @@ namespace Donkey_Kong
         }
 
         private Texture2D myTexture;
-        private Vector2 myPosition;
+        private Vector2 
+            myPosition,
+            myDirection,
+            myDestination;
         private PlayerState myPlayerState;
 
         private Animation myWalkingAnimation;
@@ -24,8 +28,10 @@ namespace Donkey_Kong
         private Point mySize;
         private Rectangle myBoundingBox;
         private SpriteEffects myFlipSprite;
+        private int myLives;
         private float
             mySpeed,
+            myClimbSpeed,
             myVelocity,
             myGravity,
             myJumpHeight;
@@ -33,11 +39,12 @@ namespace Donkey_Kong
             myIsMoving,
             myJumpAvailable;
 
-        public Player(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aJumpHeight)
+        public Player(Vector2 aPosition, Point aSize, float aSpeed, float aClimbSpeed, float aGravity, float aJumpHeight)
         {
             this.myPosition = aPosition;
             this.mySize = aSize;
             this.mySpeed = aSpeed;
+            this.myClimbSpeed = aClimbSpeed;
             this.myGravity = aGravity;
             this.myJumpHeight = aJumpHeight;
 
@@ -45,25 +52,27 @@ namespace Donkey_Kong
             this.myJumpAvailable = true;
             this.myWalkingAnimation = new Animation();
             this.myPlayerState = PlayerState.isFalling;
+            this.myDestination = new Vector2(myPosition.X + mySize.X / 2, myPosition.Y);
+            this.myDirection = Vector2.Zero;
         }
 
-        public void Update(GameTime aGameTime, Tile[,] someTiles)
+        public void Update(GameWindow aWindow, GameTime aGameTime, Level myLevel)
         {
             myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
 
             switch (myPlayerState)
             {
                 case PlayerState.isWalking:
-                    Movement(aGameTime);
+                    Movement(aWindow, aGameTime, myLevel);
                     break;
                 case PlayerState.isClimbing:
-                    Climbing(aGameTime);
+                    Climbing(aGameTime, myLevel);
                     break;
                 case PlayerState.isJumping:
                     myVelocity += myGravity;
                     myPosition.Y += myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
 
-                    if (myIsMoving)
+                    if (myIsMoving && !OutsideBounds(aWindow, aGameTime))
                     {
                         if (myFlipSprite == SpriteEffects.FlipHorizontally)
                         {
@@ -84,7 +93,7 @@ namespace Donkey_Kong
                     break;
             }
 
-            CollisionChecking(someTiles);
+            CollisionChecking(myLevel, aGameTime);
         }
 
         public void Draw(SpriteBatch aSpriteBatch, GameTime aGameTime)
@@ -118,29 +127,18 @@ namespace Donkey_Kong
             }
         }
 
-        private void Climbing(GameTime aGameTime)
+        private void Movement(GameWindow aWindow, GameTime aGameTime, Level myLevel)
         {
-            if (KeyMouseReader.KeyHold(Keys.Up))
+            if (KeyMouseReader.KeyHold(Keys.Left) && !OutsideBounds(aWindow, aGameTime))
             {
-                myPosition.Y -= 120 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
-            }
-            if (KeyMouseReader.KeyHold(Keys.Down))
-            {
-                myPosition.Y += 120 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
-            }
-        }
-        private void Movement(GameTime aGameTime)
-        {
-            if (KeyMouseReader.KeyHold(Keys.Left))
-            {
-                myPosition.X -= mySpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                myDestination = myLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X - 40, myBoundingBox.Center.Y - 40)).BoundingBox.Center.ToVector2();
 
                 myFlipSprite = SpriteEffects.FlipHorizontally;
                 myIsMoving = true;
             }
-            if (KeyMouseReader.KeyHold(Keys.Right))
+            if (KeyMouseReader.KeyHold(Keys.Right) && !OutsideBounds(aWindow, aGameTime))
             {
-                myPosition.X += mySpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                myDestination = myLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X + 40, myBoundingBox.Center.Y - 40)).BoundingBox.Center.ToVector2();
 
                 myFlipSprite = SpriteEffects.None;
                 myIsMoving = true;
@@ -148,6 +146,18 @@ namespace Donkey_Kong
             if (!KeyMouseReader.KeyHold(Keys.Left) && !KeyMouseReader.KeyHold(Keys.Right))
             {
                 myIsMoving = false;
+            }
+
+            if (Math.Abs(myBoundingBox.Center.ToVector2().X - myDestination.X) > 1.0f)
+            {
+                myDirection.X = myDestination.X - myBoundingBox.Center.ToVector2().X;
+                myDirection.Normalize();
+
+                myPosition.X += myDirection.X * mySpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+            }
+            else
+            {
+                myPosition.X = myDestination.X - mySize.X / 2;
             }
 
             if (KeyMouseReader.KeyPressed(Keys.Space) && myJumpAvailable)
@@ -159,114 +169,90 @@ namespace Donkey_Kong
                 SetTexture("Mario_Jumping");
             }
         }
-
-        private void CollisionChecking(Tile[,] someTiles)
+        private void Climbing(GameTime aGameTime, Level myLevel)
         {
-            IsFalling(someTiles);
-            CollisionBlock(someTiles);
-            CollisionLadder(someTiles);
-        }
-        private void IsFalling(Tile[,] someTiles)
-        {
-            bool tempNoCollisionFound = false;
-            bool tempBreakLoop = false;
-            for (int i = 0; i < someTiles.GetLength(0); i++)
+            if (KeyMouseReader.KeyHold(Keys.Up))
             {
-                for (int j = 0; j < someTiles.GetLength(1); j++)
-                {
-                    if (someTiles[i, j].TileType == '#' || someTiles[i, j].TileType == '%')
-                    {
-                        Rectangle tempCollisionRect = new Rectangle((int)myPosition.X, (int)myPosition.Y + mySize.Y, mySize.X, mySize.Y / 6); //Custom hitbox for checking below
-                        if (!tempCollisionRect.Intersects(someTiles[i, j].BoundingBox))
-                        {
-                            tempNoCollisionFound = true;
-                        }
-                        else
-                        {
-                            tempNoCollisionFound = false;
-                            tempBreakLoop = true;
-                            break;
-                        }
-                    }
-                }
-                if (tempBreakLoop)
-                {
-                    break;
-                }
+                myDestination = myLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).BoundingBox.Center.ToVector2();
             }
-            if (tempNoCollisionFound && myPlayerState != PlayerState.isJumping && myPlayerState != PlayerState.isClimbing)
+            if (KeyMouseReader.KeyHold(Keys.Down))
+            {
+                myDestination = myLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).BoundingBox.Center.ToVector2();
+            }
+
+            if (Math.Abs(myBoundingBox.Center.ToVector2().Y - myDestination.Y) > 1.0f)
+            {
+                myDirection.Y = myDestination.Y - myBoundingBox.Center.ToVector2().Y;
+                myDirection.Normalize();
+
+                myPosition.Y -= myDirection.Y * mySpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+            }
+            else
+            {
+                myPosition.Y = myDestination.Y - mySize.Y / 2;
+            }
+        }
+
+        private void CollisionChecking(Level myLevel, GameTime aGameTime)
+        {
+            IsFalling(myLevel);
+            CollisionBlock(myLevel);
+            CollisionLadder(myLevel, aGameTime);
+        }
+        private void IsFalling(Level myLevel)
+        {
+            if (myLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).TileType == '.')
             {
                 myPlayerState = PlayerState.isFalling;
                 SetTexture("Mario_Jumping");
             }
         }
-        private void CollisionBlock(Tile[,] someTiles)
+        private void CollisionBlock(Level myLevel)
         {
-            for (int i = 0; i < someTiles.GetLength(0); i++)
+            Tile tempTile = myLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y));
+            if (myPlayerState != PlayerState.isClimbing)
             {
-                for (int j = 0; j < someTiles.GetLength(1); j++)
+                if (tempTile.TileType == '#' || tempTile.TileType == '%')
                 {
-                    if (myBoundingBox.Intersects(someTiles[i, j].BoundingBox) && myPlayerState != PlayerState.isClimbing)
-                    {
-                        if (someTiles[i, j].TileType == '#' || someTiles[i, j].TileType == '%')
-                        {
-                            Rectangle tempIntersection = Rectangle.Intersect(myBoundingBox, someTiles[i, j].BoundingBox);
-                            if (tempIntersection.Y == someTiles[i, j].BoundingBox.Y && tempIntersection.Width >= tempIntersection.Height) //Top
-                            {
-                                myVelocity = 0;
-                                myPosition.Y = someTiles[i, j].BoundingBox.Y - myBoundingBox.Height;
-                                myJumpAvailable = true;
+                    myVelocity = 0.0f;
 
-                                myPlayerState = PlayerState.isWalking;
-                                SetTexture("Mario_Walking");
+                    myPosition.Y = myLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).BoundingBox.Y - myBoundingBox.Height;
+                    myJumpAvailable = true;
 
-                                break;
-                            }
-                        }
-                    }
+                    myPlayerState = PlayerState.isWalking;
+                    SetTexture("Mario_Walking");
                 }
             }
         }
-        private void CollisionLadder(Tile[,] someTiles)
+        private void CollisionLadder(Level myLevel, GameTime aGameTime)
         {
-            for (int i = 0; i < someTiles.GetLength(0); i++)
+            if (myLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - 40)).TileType == '@')
             {
-                for (int j = 0; j < someTiles.GetLength(1); j++)
+                if (KeyMouseReader.KeyHold(Keys.Up))
                 {
-                    Rectangle tempCollisionRect = new Rectangle((int)myPosition.X, (int)myPosition.Y + mySize.Y, mySize.X, mySize.Y / 6); //Custom hitbox for checking below
-                    if (myPlayerState != PlayerState.isClimbing)
-                    {
-                        if (myBoundingBox.Intersects(someTiles[i, j].BoundingBox) || tempCollisionRect.Intersects(someTiles[i, j].BoundingBox))
-                        {
-                            if (someTiles[i, j].TileType == '@' || (someTiles[i, j].TileType == '%' && KeyMouseReader.KeyPressed(Keys.Down)))
-                            {
-                                if (KeyMouseReader.KeyPressed(Keys.Up) || KeyMouseReader.KeyPressed(Keys.Down))
-                                {
-                                    myPlayerState = PlayerState.isClimbing;
-                                    SetTexture("Mario_Jumping");
-                                    myPosition.X = someTiles[i, j].BoundingBox.X - 14;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (tempCollisionRect.Intersects(someTiles[i, j].BoundingBox))
-                        {
-                            if ((someTiles[i, j].TileType == '%' && KeyMouseReader.KeyHold(Keys.Up)) || (someTiles[i, j].TileType == '#' && KeyMouseReader.KeyHold(Keys.Down)))
-                            {
-                                if (myPosition.Y + mySize.Y < someTiles[i, j].BoundingBox.Y)
-                                {
-                                    myPosition.Y = someTiles[i, j].BoundingBox.Y - myBoundingBox.Height;
-
-                                    myPlayerState = PlayerState.isWalking;
-                                    SetTexture("Mario_Walking");
-                                }
-                            }
-                        }
-                    }
+                    myPlayerState = PlayerState.isClimbing;
+                    SetTexture("Mario_Jumping");
                 }
             }
+        }
+        private bool OutsideBounds(GameWindow aWindow, GameTime aGameTime)
+        {
+            if (myPosition.X < 0)
+            {
+                myPosition.X = 0;
+                return true;
+            }
+            if (myPosition.X + mySize.X > aWindow.ClientBounds.Width)
+            {
+                myPosition.X = aWindow.ClientBounds.Width - mySize.X;
+                return true;
+            }
+            if (myPosition.Y > aWindow.ClientBounds.Height) //Safety measure
+            {
+                myPosition = new Vector2(aWindow.ClientBounds.Width / 6, aWindow.ClientBounds.Height - 720);
+                myPlayerState = PlayerState.isFalling;
+            }
+            return false;
         }
 
         public void SetTexture(string aTextureName)
