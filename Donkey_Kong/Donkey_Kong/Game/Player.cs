@@ -57,7 +57,7 @@ namespace Donkey_Kong
                     Movement(aGameTime);
                     break;
                 case PlayerState.isClimbing:
-
+                    Climbing(aGameTime);
                     break;
                 case PlayerState.isJumping:
                     myVelocity += myGravity;
@@ -104,7 +104,7 @@ namespace Donkey_Kong
                     }
                     break;
                 case PlayerState.isClimbing:
-
+                    aSpriteBatch.Draw(myTexture, new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y), null, Color.White, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
                     break;
                 case PlayerState.isJumping:
                     aSpriteBatch.Draw(myTexture, new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y), null, Color.White, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
@@ -118,6 +118,17 @@ namespace Donkey_Kong
             }
         }
 
+        private void Climbing(GameTime aGameTime)
+        {
+            if (KeyMouseReader.KeyHold(Keys.Up))
+            {
+                myPosition.Y -= 120 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (KeyMouseReader.KeyHold(Keys.Down))
+            {
+                myPosition.Y += 120 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+            }
+        }
         private void Movement(GameTime aGameTime)
         {
             if (KeyMouseReader.KeyHold(Keys.Left))
@@ -152,7 +163,8 @@ namespace Donkey_Kong
         private void CollisionChecking(Tile[,] someTiles)
         {
             IsFalling(someTiles);
-            Collision(someTiles);
+            CollisionBlock(someTiles);
+            CollisionLadder(someTiles);
         }
         private void IsFalling(Tile[,] someTiles)
         {
@@ -182,19 +194,19 @@ namespace Donkey_Kong
                     break;
                 }
             }
-            if (tempNoCollisionFound && myPlayerState != PlayerState.isJumping)
+            if (tempNoCollisionFound && myPlayerState != PlayerState.isJumping && myPlayerState != PlayerState.isClimbing)
             {
                 myPlayerState = PlayerState.isFalling;
                 SetTexture("Mario_Jumping");
             }
         }
-        private void Collision(Tile[,] someTiles)
+        private void CollisionBlock(Tile[,] someTiles)
         {
             for (int i = 0; i < someTiles.GetLength(0); i++)
             {
                 for (int j = 0; j < someTiles.GetLength(1); j++)
                 {
-                    if (myBoundingBox.Intersects(someTiles[i, j].BoundingBox))
+                    if (myBoundingBox.Intersects(someTiles[i, j].BoundingBox) && myPlayerState != PlayerState.isClimbing)
                     {
                         if (someTiles[i, j].TileType == '#' || someTiles[i, j].TileType == '%')
                         {
@@ -207,11 +219,50 @@ namespace Donkey_Kong
 
                                 myPlayerState = PlayerState.isWalking;
                                 SetTexture("Mario_Walking");
+
+                                break;
                             }
                         }
-                        if (someTiles[i, j].TileType == '@' && KeyMouseReader.KeyPressed(Keys.Up))
+                    }
+                }
+            }
+        }
+        private void CollisionLadder(Tile[,] someTiles)
+        {
+            for (int i = 0; i < someTiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < someTiles.GetLength(1); j++)
+                {
+                    Rectangle tempCollisionRect = new Rectangle((int)myPosition.X, (int)myPosition.Y + mySize.Y, mySize.X, mySize.Y / 6); //Custom hitbox for checking below
+                    if (myPlayerState != PlayerState.isClimbing)
+                    {
+                        if (myBoundingBox.Intersects(someTiles[i, j].BoundingBox) || tempCollisionRect.Intersects(someTiles[i, j].BoundingBox))
                         {
-                            myPlayerState = PlayerState.isClimbing;
+                            if (someTiles[i, j].TileType == '@' || (someTiles[i, j].TileType == '%' && KeyMouseReader.KeyPressed(Keys.Down)))
+                            {
+                                if (KeyMouseReader.KeyPressed(Keys.Up) || KeyMouseReader.KeyPressed(Keys.Down))
+                                {
+                                    myPlayerState = PlayerState.isClimbing;
+                                    SetTexture("Mario_Jumping");
+                                    myPosition.X = someTiles[i, j].BoundingBox.X - 14;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (tempCollisionRect.Intersects(someTiles[i, j].BoundingBox))
+                        {
+                            if ((someTiles[i, j].TileType == '%' && KeyMouseReader.KeyHold(Keys.Up)) || (someTiles[i, j].TileType == '#' && KeyMouseReader.KeyHold(Keys.Down)))
+                            {
+                                if (myPosition.Y + mySize.Y < someTiles[i, j].BoundingBox.Y)
+                                {
+                                    myPosition.Y = someTiles[i, j].BoundingBox.Y - myBoundingBox.Height;
+
+                                    myPlayerState = PlayerState.isWalking;
+                                    SetTexture("Mario_Walking");
+                                }
+                            }
                         }
                     }
                 }

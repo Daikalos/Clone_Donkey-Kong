@@ -20,7 +20,7 @@ namespace Donkey_Kong
         /// <summary>
         /// # = Block; 
         /// @ = Ladder;
-        /// # = BridgeLadder;
+        /// % = BridgeLadder;
         /// ? = Pins; 
         /// . = Empty;
         /// </summary>
