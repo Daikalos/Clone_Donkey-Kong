@@ -40,7 +40,7 @@ namespace Donkey_Kong
             ResourceManager.Initialize();
             myGameState = GameState.isPlaying;
 
-            myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 60), new Point(40, 40), 170.0f, 120.0f, 7.8f, -200.0f);
+            myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 60), new Point(40, 40), 170.0f, 120.0f, 15.5f, -310.0f);
             myLevel = new Level(@"../../../../Levels/Level01.txt");
 
             base.Initialize();

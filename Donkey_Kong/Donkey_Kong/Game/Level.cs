@@ -22,7 +22,14 @@ namespace Donkey_Kong
 
         public Tile GetTileAtPos(Vector2 aPos)
         {
-            return myTiles[(int)aPos.X / 40, (int)aPos.Y / 40];
+            if (((int)aPos.X / 40) >= 0 && ((int)aPos.Y / 40) >= 0)
+            {
+                if (((int)aPos.X / 40) < myTiles.GetLength(0) && ((int)aPos.Y / 40) < myTiles.GetLength(1))
+                {
+                    return myTiles[(int)aPos.X / 40, (int)aPos.Y / 40];
+                }
+            }
+            return myTiles[0, 0];
         }
 
         public Level(string aFilePath)
