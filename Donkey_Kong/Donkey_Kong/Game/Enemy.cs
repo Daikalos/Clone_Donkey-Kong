@@ -141,7 +141,7 @@ namespace Donkey_Kong
         public void MoveTo(Random aRNG, Level aLevel, int aDirection)
         {
             Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y));
-            for (int i = 1; i < aRNG.Next(0, 6) + 1; i++)
+            for (int i = 1; i < aRNG.Next(0, 7) + 1; i++)
             {
                 tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * i * aDirection), myBoundingBox.Center.Y + 40));
                 if (tempTile.TileType == '.')
