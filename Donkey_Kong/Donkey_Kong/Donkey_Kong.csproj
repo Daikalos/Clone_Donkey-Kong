@@ -47,6 +47,7 @@
     <Compile Include="Functions\ResourceManager.cs" />
     <Compile Include="Functions\StringManager.cs" />
     <Compile Include="Game\Enemy.cs" />
+    <Compile Include="Game\EnemyManager.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="Game\Level.cs" />
     <Compile Include="Game\Player.cs" />

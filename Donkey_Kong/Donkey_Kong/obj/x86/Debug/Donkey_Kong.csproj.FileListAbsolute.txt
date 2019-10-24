@@ -60,3 +60,6 @@ C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\obj\x86\Deb
 C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\obj\x86\Debug\Donkey_Kong.csproj.CopyComplete
 C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\obj\x86\Debug\Donkey_Kong.exe
 C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\obj\x86\Debug\Donkey_Kong.pdb
+C:\Users\tobia\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\enemy.xnb
+C:\Users\tobia\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\mario_lives.xnb
+C:\Users\tobia\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\start.xnb

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Donkey_Kong
 {
@@ -47,16 +41,11 @@ namespace Donkey_Kong
                 {
                     int tempTileSize = 40;
                     myTiles[x, y] = new Tile(
-                        new Vector2(x * tempTileSize, (y + 1) * tempTileSize), 
+                        new Vector2(x * tempTileSize, y * tempTileSize), 
                         new Point(tempTileSize));
                     myTiles[x, y].TileType = myLevelBuilder[y][x];
                 }
             }
-        }
-
-        public void Update()
-        {
-
         }
 
         public void Draw(SpriteBatch aSpriteBatch)

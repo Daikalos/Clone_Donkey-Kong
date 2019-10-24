@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/ladder.png</SourceFile>
-  <SourceTime>2019-10-19T23:14:52.7065155+02:00</SourceTime>
-  <DestFile>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/bin/Windows/Content/Sprites/ladder.xnb</DestFile>
-  <DestTime>2019-10-21T17:04:43.9374283+02:00</DestTime>
+  <SourceFile>C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/ladder.png</SourceFile>
+  <SourceTime>2019-10-17T14:48:47.9469666+02:00</SourceTime>
+  <DestFile>C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/bin/Windows/Content/Sprites/ladder.xnb</DestFile>
+  <DestTime>2019-10-24T12:52:11.8166839+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

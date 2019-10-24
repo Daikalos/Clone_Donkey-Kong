@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/bridge.png</SourceFile>
-  <SourceTime>2019-10-17T14:48:46.0978792+02:00</SourceTime>
-  <DestFile>C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/bin/Windows/Content/Sprites/bridge.xnb</DestFile>
-  <DestTime>2019-10-24T12:52:11.717948+02:00</DestTime>
+  <SourceFile>C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/mario_lives.png</SourceFile>
+  <SourceTime>2019-10-24T15:16:33.9440588+02:00</SourceTime>
+  <DestFile>C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/bin/Windows/Content/Sprites/mario_lives.xnb</DestFile>
+  <DestTime>2019-10-24T15:34:37.7785277+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
