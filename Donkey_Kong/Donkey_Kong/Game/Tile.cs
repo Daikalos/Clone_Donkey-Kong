@@ -41,11 +41,6 @@ namespace Donkey_Kong
             this.myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, aSize.X, aSize.Y);
         }
 
-        public void Update()
-        {
-
-        }
-
         public void Draw(SpriteBatch aSpriteBatch)
         {
             if (myTexture != null)
@@ -69,6 +64,10 @@ namespace Donkey_Kong
                     break;
                 case '=':
                     myTexture = ResourceManager.RequestTexture("Pole");
+                    break;
+                case '?':
+                    myTexture = ResourceManager.RequestTexture("Sprint");
+                    myPosition.Y -= 4;
                     break;
                 case '.':
                     myTexture = ResourceManager.RequestTexture("Empty");
