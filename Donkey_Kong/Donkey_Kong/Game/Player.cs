@@ -166,23 +166,25 @@ namespace Donkey_Kong
 
                 if (myIsMoving)
                 {
-                    for (int i = 0; i < 4; i++)
+                    for (int i = 4; i > 0; i--)
                     {
                         if (myFlipSprite == SpriteEffects.None)
                         {
-                            if (aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X + (40 * i), myBoundingBox.Center.Y + 40)).TileType == '.')
+                            Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X + (40 * (i - 1)), myBoundingBox.Center.Y + 40));
+                            if (tempTile.TileType == '#' || tempTile.TileType == '%')
                             {
+                                myDestination = tempTile.BoundingBox.Center.ToVector2();
                                 break;
                             }
-                            myDestination = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X + (40 * i), myBoundingBox.Center.Y)).BoundingBox.Center.ToVector2();
                         }
                         else
                         {
-                            if (aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * i), myBoundingBox.Center.Y + 40)).TileType == '.')
+                            Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * (i - 1)), myBoundingBox.Center.Y + 40));
+                            if (tempTile.TileType == '#' || tempTile.TileType == '%')
                             {
+                                myDestination = tempTile.BoundingBox.Center.ToVector2();
                                 break;
                             }
-                            myDestination = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * i), myBoundingBox.Center.Y)).BoundingBox.Center.ToVector2();
                         }
                     }
                 }
@@ -236,13 +238,14 @@ namespace Donkey_Kong
             IsFalling(aLevel);
             CollisionBlock(aGameTime, aLevel);
             CollisionLadder(aLevel);
+            CollisionSprint(aLevel);
         }
         private void IsFalling(Level aLevel)
         {
             Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40));
             if (Math.Abs(myBoundingBox.Center.X - tempTile.BoundingBox.Center.X) <= 1.0f && myPlayerState != PlayerState.isJumping)
             {
-                if (tempTile.TileType == '.' || tempTile.TileType == '?')
+                if (tempTile.TileType == '.')
                 {
                     myPosition.X = tempTile.Position.X;
 
@@ -305,6 +308,18 @@ namespace Donkey_Kong
                             SetTexture("Mario_Walking");
                         }
                     }
+                }
+            }
+        }
+        private void CollisionSprint(Level aLevel)
+        {
+            for (int i = 1; i <= 2; i++)
+            {
+                Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40 * i));
+                if (tempTile.TileType == '?')
+                {
+                    tempTile.TileType = '.';
+                    tempTile.SetTexture();
                 }
             }
         }

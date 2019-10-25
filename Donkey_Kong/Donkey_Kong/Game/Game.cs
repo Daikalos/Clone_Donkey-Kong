@@ -61,6 +61,7 @@ namespace Donkey_Kong
             myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 60), new Point(40), 170.0f, 120.0f, 15.5f, -320.0f);
             myLevel = new Level(@"../../../../Levels/Level01.txt");
             myEnemyManager = new EnemyManager(5.0f, 5);
+            myMenuAnimation = new Animation();
 
             myLives = 3;
             myScore = 0;
@@ -98,15 +99,19 @@ namespace Donkey_Kong
             ResourceManager.AddTexture("Ladder", this.Content.Load<Texture2D>("Sprites/ladder"));
             ResourceManager.AddTexture("BridgeLadder", this.Content.Load<Texture2D>("Sprites/bridgeLadder"));
             ResourceManager.AddTexture("Empty", this.Content.Load<Texture2D>("Sprites/empty"));
+            ResourceManager.AddTexture("Sprint", this.Content.Load<Texture2D>("Sprites/sprint"));
             ResourceManager.AddTexture("Pole", this.Content.Load<Texture2D>("Sprites/pole"));
             ResourceManager.AddTexture("Enemy", this.Content.Load<Texture2D>("Sprites/enemy"));
             ResourceManager.AddTexture("Menu", this.Content.Load<Texture2D>("Sprites/start"));
+            ResourceManager.AddTexture("Donkey_Kong", this.Content.Load<Texture2D>("Sprites/donkey_kong"));
 
             ResourceManager.AddFont("8-bit", this.Content.Load<SpriteFont>("Fonts/8-bit"));
 
             myPlayer.SetTexture("Mario_Walking");
             myLevel.SetTileTexture();
+
             myMenuTexture = ResourceManager.RequestTexture("Menu");
+            myDKTexture = ResourceManager.RequestTexture("Donkey_Kong");
 
             my8BitFont = ResourceManager.RequestFont("8-bit");
         }
@@ -155,8 +160,11 @@ namespace Donkey_Kong
             switch (myGameState)
             {
                 case GameState.isOnMenu:
-                    spriteBatch.Draw(myMenuTexture, new Rectangle(Window.ClientBounds.Width / 4, 0, Window.ClientBounds.Width / 2, (Window.ClientBounds.Height / 2) + 20), null, Color.White);
-                    StringManager.DrawStringMid(spriteBatch, my8BitFont, "Press ENTER to start", new Vector2(Window.ClientBounds.Width / 2, (Window.ClientBounds.Height / 2) + 60), Color.DarkOrange, 1.2f);
+                    spriteBatch.Draw(myMenuTexture, new Rectangle(Window.ClientBounds.Width / 4, 20, (Window.ClientBounds.Width / 2), (Window.ClientBounds.Height / 2)), null, Color.White);
+                    StringManager.DrawStringMid(spriteBatch, my8BitFont, "Press ENTER to start", new Vector2(Window.ClientBounds.Width / 2, (Window.ClientBounds.Height / 2) + 80), Color.DarkOrange, 1.2f);
+                    myMenuAnimation.DrawSpriteSheet(spriteBatch, gameTime, myDKTexture, new Vector2(
+                        (Window.ClientBounds.Width / 2) - (myDKTexture.Width / 4) * 4,
+                        (Window.ClientBounds.Height / 2) + (myDKTexture.Height / 2) * 9), myDKTexture.Width / 2, myDKTexture.Height, (myDKTexture.Width / 2) * 4, myDKTexture.Height * 4, 2, 1, 1.0f, SpriteEffects.None, true);
                     break;
                 case GameState.isPlaying:
                     myLevel.Draw(spriteBatch);

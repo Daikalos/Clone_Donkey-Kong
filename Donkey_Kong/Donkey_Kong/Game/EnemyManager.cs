@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Donkey_Kong
 {
@@ -15,8 +11,7 @@ namespace Donkey_Kong
         private int myMaxEnemies;
         private float
             mySpawnTimer,
-            mySpawnTimerMax,
-            myEnemySpeed;
+            mySpawnTimerMax;
 
         public EnemyManager(float aSpawnTimerMax, int someMaxEnemies)
         {
@@ -61,10 +56,10 @@ namespace Donkey_Kong
         public void AddEnemy(GameWindow aWindow, Random aRNG, Player aPlayer)
         {
             Vector2 tempSpawnPos = Vector2.Zero;
-            float tempSpeed = aRNG.Next(100, 140);
+            float tempSpeed = aRNG.Next(120, 160);
 
             tempSpawnPos = new Vector2((aWindow.ClientBounds.Width / 2) - 40, aWindow.ClientBounds.Height - (120 * (aRNG.Next(0, 4) + 1) + 60));
-            if (Vector2.Distance(tempSpawnPos, aPlayer.Position) < 200.0f)
+            if (Vector2.Distance(tempSpawnPos, aPlayer.Position) < 100.0f)
             {
                 AddEnemy(aWindow, aRNG, aPlayer);
             }

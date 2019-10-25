@@ -66,3 +66,5 @@ C:\Users\tobia\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\
 C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\enemy.xnb
 C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\mario_lives.xnb
 C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\start.xnb
+C:\Users\tobia\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\donkey_kong.xnb
+C:\Users\tobia\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\sprint.xnb
