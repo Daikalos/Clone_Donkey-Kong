@@ -155,6 +155,7 @@ namespace Donkey_Kong
 
                 myPosition.X += myDirection.X * mySpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds;
 
+                ResourceManager.StopSound("Jump");
                 ResourceManager.PlaySound("Walking");
             }
             else
@@ -274,6 +275,8 @@ namespace Donkey_Kong
 
                     myPlayerState = PlayerState.isFalling;
                     SetTexture("Mario_Jumping");
+
+                    ResourceManager.StopSound("Walking");
                 }
             }
         }
@@ -345,7 +348,7 @@ namespace Donkey_Kong
                     tempTile.SetTexture();
 
                     ResourceManager.PlaySound("Item_Get");
-                    GameInfo.AddScore(100);
+                    GameInfo.AddScore(tempTile.BoundingBox.Center.ToVector2(), 100);
                 }
             }
         }
@@ -358,7 +361,7 @@ namespace Donkey_Kong
                 tempTile.SetTexture();
 
                 ResourceManager.PlaySound("Item_Get");
-                GameInfo.AddScore(100);
+                GameInfo.AddScore(tempTile.BoundingBox.Center.ToVector2(), 100);
             }
         }
         private int OutsideBounds(GameWindow aWindow, Level aLevel)

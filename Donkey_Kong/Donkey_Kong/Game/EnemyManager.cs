@@ -8,14 +8,16 @@ namespace Donkey_Kong
     class EnemyManager
     {
         private List<Enemy> myEnemies;
+        private Point myEnemySpeed;
         private int myMaxEnemies;
         private float
             mySpawnTimer,
             mySpawnTimerMax;
 
-        public EnemyManager(float aSpawnTimerMax, int someMaxEnemies)
+        public EnemyManager(Point aEnemySpeed, float aSpawnTimerMax, int someMaxEnemies)
         {
             this.mySpawnTimerMax = aSpawnTimerMax;
+            this.myEnemySpeed = aEnemySpeed;
             this.myMaxEnemies = someMaxEnemies;
 
             mySpawnTimer = 0;
@@ -54,7 +56,7 @@ namespace Donkey_Kong
 
         public void AddEnemy(GameWindow aWindow, Random aRNG, Player aPlayer)
         {
-            float tempSpeed = aRNG.Next(120, 160);
+            float tempSpeed = aRNG.Next(myEnemySpeed.X, myEnemySpeed.Y);
             Vector2 tempSpawnPos = new Vector2((aWindow.ClientBounds.Width / 2) - 40, aWindow.ClientBounds.Height - (120 * (aRNG.Next(0, 4) + 1) + 60));
 
             if (Vector2.Distance(tempSpawnPos, aPlayer.Position) < 100.0f)

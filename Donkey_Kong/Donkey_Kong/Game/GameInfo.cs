@@ -10,7 +10,10 @@ namespace Donkey_Kong
 {
     static class GameInfo
     {
-        static int myScore;
+        static Vector2 myDrawPos;
+        static int 
+            myScore,
+            myDrawScore;
         static float 
             myDSTimer,
             myDSTimerMax; //Draw Score
@@ -19,6 +22,10 @@ namespace Donkey_Kong
         {
             get => myScore;
         }
+        public static Vector2 DrawPos
+        {
+            set => myDrawPos = value;
+        }
 
         public static void Initialize(float aDSTimerMax)
         {
@@ -26,21 +33,31 @@ namespace Donkey_Kong
 
             myScore = 0;
             myDSTimer = 0;
+            myDrawPos = Vector2.Zero;
         }
 
         public static void Update(GameTime aGameTime)
         {
-
+            if (myDSTimer >= 0)
+            {
+                myDSTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
+            }
         }
 
-        public static void Draw(SpriteBatch aSpriteBatch)
+        public static void Draw(SpriteBatch aSpriteBatch, SpriteFont aFont)
         {
-
+            if (myDSTimer >= 0)
+            {
+                StringManager.DrawStringMid(aSpriteBatch, aFont, myDrawScore.ToString(), myDrawPos, Color.White, 0.5f);
+            }
         }
 
-        public static void AddScore(int someScore)
+        public static void AddScore(Vector2 aPos, int someScore)
         {
+            myDrawPos = new Vector2(aPos.X, aPos.Y - 40);
             myScore += someScore;
+            myDrawScore = someScore;
+            myDSTimer = myDSTimerMax;
         }
     }
 }

@@ -38,10 +38,12 @@ namespace Donkey_Kong
         private GameState myGameState;
         private SpriteFont my8BitFont;
 
-        private int 
-            myScore,
+        private int
             myBonusScore,
             myHighScore;
+        private float
+            myReduceBonus,
+            myReduceBonusMax;
         private int[] myHighScores;
 
         public Game()
@@ -58,17 +60,17 @@ namespace Donkey_Kong
 
             myRNG = new Random();
 
-            GameInfo.Initialize(2.0f);
+            GameInfo.Initialize(1.2f);
             ResourceManager.Initialize();
             myGameState = GameState.isOnMenu;
 
             myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 60), new Point(40), 3, 170.0f, 120.0f, 15.5f, -320.0f);
             myLevel = new Level(@"../../../../Levels/Level01.txt");
-            myEnemyManager = new EnemyManager(5.0f, 5);
+            myEnemyManager = new EnemyManager(new Point(140, 180), 6.0f, 6);
             myDKIdleAnimation = new Animation();
 
-            myScore = 0;
-            myBonusScore = 5000;
+            myBonusScore = 6000;
+            myReduceBonusMax = 1.5f;
             myHighScore = 0;
 
             string tempFilePath = @"../../../../High-Score/High-Score.txt"; //Load HighScore
@@ -92,6 +94,7 @@ namespace Donkey_Kong
             ResourceManager.AddTexture("Bridge", this.Content.Load<Texture2D>("Sprites/bridge"));
             ResourceManager.AddTexture("Ladder", this.Content.Load<Texture2D>("Sprites/ladder"));
             ResourceManager.AddTexture("BridgeLadder", this.Content.Load<Texture2D>("Sprites/bridgeLadder"));
+            ResourceManager.AddTexture("BridgePole", this.Content.Load<Texture2D>("Sprites/bridgePole"));
             ResourceManager.AddTexture("Empty", this.Content.Load<Texture2D>("Sprites/empty"));
             ResourceManager.AddTexture("Sprint", this.Content.Load<Texture2D>("Sprites/sprint"));
             ResourceManager.AddTexture("Pole", this.Content.Load<Texture2D>("Sprites/pole"));
@@ -139,6 +142,15 @@ namespace Donkey_Kong
                     break;
                 case GameState.isPlaying:
                     ResourceManager.PlaySound("BacMusic");
+                    GameInfo.Update(gameTime);
+
+                    myReduceBonus += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (myReduceBonus >= myReduceBonusMax)
+                    {
+                        myBonusScore -= 100;
+                        myReduceBonus = 0;
+                    }
+
                     myPlayer.Update(Window, gameTime, myLevel);
                     myEnemyManager.Update(Window, gameTime, myRNG, myLevel, myPlayer);
                     break;
@@ -189,6 +201,7 @@ namespace Donkey_Kong
                         new Point(4, 1), 1.3f, Color.White, SpriteEffects.None, true);
 
                     myLevel.Draw(spriteBatch);
+                    GameInfo.Draw(spriteBatch, my8BitFont);
                     myEnemyManager.Draw(spriteBatch);
                     myPlayer.Draw(spriteBatch, gameTime);
 

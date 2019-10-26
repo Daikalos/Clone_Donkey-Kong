@@ -71,6 +71,9 @@ namespace Donkey_Kong
                 case '=':
                     myTexture = ResourceManager.RequestTexture("Pole");
                     break;
+                case '&':
+                    myTexture = ResourceManager.RequestTexture("BridgePole");
+                    break;
                 case '?':
                     myTexture = ResourceManager.RequestTexture("Sprint");
                     myBoundingBox = new Rectangle((int)myPosition.X - 6, (int)myPosition.Y - 4, 52, 42);
