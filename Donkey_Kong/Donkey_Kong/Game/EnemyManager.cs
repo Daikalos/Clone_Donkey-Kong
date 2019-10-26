@@ -54,10 +54,9 @@ namespace Donkey_Kong
 
         public void AddEnemy(GameWindow aWindow, Random aRNG, Player aPlayer)
         {
-            Vector2 tempSpawnPos = Vector2.Zero;
             float tempSpeed = aRNG.Next(120, 160);
+            Vector2 tempSpawnPos = new Vector2((aWindow.ClientBounds.Width / 2) - 40, aWindow.ClientBounds.Height - (120 * (aRNG.Next(0, 4) + 1) + 60));
 
-            tempSpawnPos = new Vector2((aWindow.ClientBounds.Width / 2) - 40, aWindow.ClientBounds.Height - (120 * (aRNG.Next(0, 4) + 1) + 60));
             if (Vector2.Distance(tempSpawnPos, aPlayer.Position) < 100.0f)
             {
                 AddEnemy(aWindow, aRNG, aPlayer);
@@ -65,7 +64,6 @@ namespace Donkey_Kong
 
             Enemy tempEnemy = new Enemy(tempSpawnPos, new Point(40), tempSpeed, 1.5f);
             tempEnemy.SetTexture("Enemy");
-
             myEnemies.Add(tempEnemy);
         }
     }

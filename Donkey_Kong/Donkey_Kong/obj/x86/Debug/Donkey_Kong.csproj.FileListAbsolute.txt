@@ -68,3 +68,14 @@ C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows
 C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\start.xnb
 C:\Users\tobia\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\donkey_kong.xnb
 C:\Users\tobia\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\sprint.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\sprint.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\items.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\dk_idle.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\dk_laughing.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\mario_death.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sounds\bacmusic.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sounds\death.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sounds\itemget.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sounds\jump.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sounds\walking.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sounds\win1.xnb

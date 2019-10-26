@@ -57,7 +57,7 @@ namespace Donkey_Kong
                     Movement(aGameTime, aRNG, aLevel);
                     break;
                 case EnemyState.isClimbing:
-                    Climbing(aGameTime, aLevel);
+                    Climbing(aGameTime);
                     break;
             }
         }
@@ -67,7 +67,7 @@ namespace Donkey_Kong
             aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
         }
 
-        private void Climbing(GameTime aGameTime, Level aLevel)
+        private void Climbing(GameTime aGameTime)
         {
             if (Math.Abs(myBoundingBox.Center.ToVector2().Y - myDestination.Y) > 1.0f)
             {

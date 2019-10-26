@@ -17,7 +17,9 @@ namespace Donkey_Kong
         }
 
         private Texture2D myTexture;
-        private Animation myWalkingAnimation;
+        private Animation 
+            myWalkingAnimation,
+            myDeathAnimation;
 
         private Vector2 
             myPosition,
@@ -25,29 +27,37 @@ namespace Donkey_Kong
             myDestination;
         private Point mySize;
         private Rectangle myBoundingBox;
+        private Color myMarioColor; //For invincibility
         private PlayerState myPlayerState;
         private SpriteEffects myFlipSprite;
 
+        private int myHealth;
         private float
             mySpeed,
             myClimbSpeed,
             myVelocity,
             myGravity,
             myJumpHeight,
-            myInvincibiltyFrames;
+            myInvincibilityFrames;
         private bool
             myIsMoving,
-            myJumpAvailable;
+            myJumpAvailable,
+            myIsDead;
 
         public Vector2 Position
         {
             get => myPosition;
         }
+        public int Health
+        {
+            get => myHealth;
+        }
 
-        public Player(Vector2 aPosition, Point aSize, float aSpeed, float aClimbSpeed, float aGravity, float aJumpHeight)
+        public Player(Vector2 aPosition, Point aSize, int aHealth, float aSpeed, float aClimbSpeed, float aGravity, float aJumpHeight)
         {
             this.myPosition = aPosition;
             this.mySize = aSize;
+            this.myHealth = aHealth;
             this.mySpeed = aSpeed;
             this.myClimbSpeed = aClimbSpeed;
             this.myGravity = aGravity;
@@ -59,20 +69,13 @@ namespace Donkey_Kong
             this.myPlayerState = PlayerState.isFalling;
             this.myDestination = new Vector2(myPosition.X + mySize.X / 2, myPosition.Y);
             this.myDirection = Vector2.Zero;
+            this.myMarioColor = Color.White;
+            this.myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
         }
 
         public void Update(GameWindow aWindow, GameTime aGameTime, Level aLevel)
         {
             myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
-
-            if (myInvincibiltyFrames > 0)
-            {
-                myInvincibiltyFrames -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
-            }
-            else
-            {
-                myInvincibiltyFrames = 0;
-            }
 
             switch (myPlayerState)
             {
@@ -83,7 +86,7 @@ namespace Donkey_Kong
                     Climbing(aGameTime, aLevel);
                     break;
                 case PlayerState.isJumping:
-                    Jumping(aGameTime, aLevel);
+                    Jumping(aGameTime);
                     break;
                 case PlayerState.isFalling:
                     myVelocity += myGravity;
@@ -94,6 +97,7 @@ namespace Donkey_Kong
                     break;
             }
 
+            Invincibility(aGameTime);
             CollisionChecking(aGameTime, aLevel);
         }
 
@@ -104,23 +108,22 @@ namespace Donkey_Kong
                 case PlayerState.isWalking:
                     if (myIsMoving)
                     {
-                        myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, myTexture.Width / 3, myTexture.Height, mySize.X, mySize.Y, 3, 1, 0.035f, myFlipSprite, true);
+                        myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, new Point(myTexture.Width / 3, myTexture.Height), mySize, new Point(3, 1), 0.035f, myMarioColor, myFlipSprite, true);
                     }
                     else
                     {
-                        aSpriteBatch.Draw(myTexture,
-                            new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y),
-                            new Rectangle(myTexture.Width / 3, 0, myTexture.Width / 3, myTexture.Height), Color.White, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
+                        aSpriteBatch.Draw(myTexture, myBoundingBox,
+                            new Rectangle(myTexture.Width / 3, 0, myTexture.Width / 3, myTexture.Height), myMarioColor, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
                     }
                     break;
                 case PlayerState.isClimbing:
-                    aSpriteBatch.Draw(myTexture, new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y), null, Color.White, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
+                    aSpriteBatch.Draw(myTexture, myBoundingBox, null, myMarioColor, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
                     break;
                 case PlayerState.isJumping:
-                    aSpriteBatch.Draw(myTexture, new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y), null, Color.White, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
+                    aSpriteBatch.Draw(myTexture, myBoundingBox, null, myMarioColor, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
                     break;
                 case PlayerState.isFalling:
-                    aSpriteBatch.Draw(myTexture, new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y), null, Color.White, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
+                    aSpriteBatch.Draw(myTexture, myBoundingBox, null, myMarioColor, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
                     break;
                 case PlayerState.isDead:
 
@@ -151,11 +154,15 @@ namespace Donkey_Kong
                 myDirection.Normalize();
 
                 myPosition.X += myDirection.X * mySpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+
+                ResourceManager.PlaySound("Walking");
             }
             else
             {
                 myPosition.X = myDestination.X - mySize.X / 2;
                 myIsMoving = false;
+
+                ResourceManager.StopSound("Walking");
             }
 
             if (KeyMouseReader.KeyPressed(Keys.Space) && myJumpAvailable && aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).TileType != '.')
@@ -163,6 +170,9 @@ namespace Donkey_Kong
                 myPlayerState = PlayerState.isJumping;
                 myVelocity = myJumpHeight;
                 myJumpAvailable = false;
+
+                ResourceManager.StopSound("Walking");
+                ResourceManager.PlaySound("Jump");
 
                 if (myIsMoving)
                 {
@@ -215,7 +225,7 @@ namespace Donkey_Kong
                 myPosition.Y = myDestination.Y - mySize.Y / 2;
             }
         }
-        private void Jumping(GameTime aGameTime, Level aLevel)
+        private void Jumping(GameTime aGameTime)
         {
             myVelocity += myGravity;
             myPosition.Y += myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
@@ -232,6 +242,18 @@ namespace Donkey_Kong
                 myPosition.X = myDestination.X - mySize.X / 2;
             }
         }
+        private void Invincibility(GameTime aGameTime)
+        {
+            if (myInvincibilityFrames > 0)
+            {
+                myInvincibilityFrames -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
+            }
+            else
+            {
+                myInvincibilityFrames = 0;
+                myMarioColor = Color.White;
+            }
+        }
 
         private void CollisionChecking(GameTime aGameTime, Level aLevel)
         {
@@ -239,6 +261,7 @@ namespace Donkey_Kong
             CollisionBlock(aGameTime, aLevel);
             CollisionLadder(aLevel);
             CollisionSprint(aLevel);
+            CollisionItem(aLevel);
         }
         private void IsFalling(Level aLevel)
         {
@@ -320,7 +343,22 @@ namespace Donkey_Kong
                 {
                     tempTile.TileType = '.';
                     tempTile.SetTexture();
+
+                    ResourceManager.PlaySound("Item_Get");
+                    GameInfo.AddScore(100);
                 }
+            }
+        }
+        private void CollisionItem(Level aLevel)
+        {
+            Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y));
+            if (tempTile.TileType == '/')
+            {
+                tempTile.TileType = '.';
+                tempTile.SetTexture();
+
+                ResourceManager.PlaySound("Item_Get");
+                GameInfo.AddScore(100);
             }
         }
         private int OutsideBounds(GameWindow aWindow, Level aLevel)
@@ -343,6 +381,15 @@ namespace Donkey_Kong
             return 0;
         }
 
+        public void TakeDamage()
+        {
+            if (myInvincibilityFrames <= 0)
+            {
+                myHealth--;
+                myMarioColor = new Color(0, 60, 120, 210.0f);
+                myInvincibilityFrames = 2.0f;
+            }
+        }
         public void SetTexture(string aTextureName)
         {
             myTexture = ResourceManager.RequestTexture(aTextureName);

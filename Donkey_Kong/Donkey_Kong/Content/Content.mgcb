@@ -23,6 +23,42 @@
 #begin Fonts/8bit16.ttf
 /copy:Fonts/8bit16.ttf;Fonts/8bit_Font.ttf
 
+#begin Sounds/bacmusic.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/bacmusic.wav
+
+#begin Sounds/death.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/death.wav
+
+#begin Sounds/itemget.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/itemget.wav
+
+#begin Sounds/jump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/jump.wav
+
+#begin Sounds/walking.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/walking.wav
+
+#begin Sounds/win1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/win1.wav
+
 #begin Sprites/bridge.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -47,7 +83,7 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/bridgeLadder.png
 
-#begin Sprites/donkey_kong.png
+#begin Sprites/dk_idle.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -57,7 +93,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/donkey_kong.png
+/build:Sprites/dk_idle.png
+
+#begin Sprites/dk_laughing.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/dk_laughing.png
 
 #begin Sprites/empty.png
 /importer:TextureImporter
@@ -83,6 +131,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/enemy.png
 
+#begin Sprites/items.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/items.png
+
 #begin Sprites/ladder.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -95,7 +155,7 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/ladder.png
 
-#begin Sprites/Mario_Jumping.png
+#begin Sprites/mario_death.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -105,7 +165,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Mario_Jumping.png
+/build:Sprites/mario_death.png
+
+#begin Sprites/mario_jumping.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/mario_jumping.png
 
 #begin Sprites/mario_lives.png
 /importer:TextureImporter
@@ -119,7 +191,7 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/mario_lives.png
 
-#begin Sprites/Mario_Walking.png
+#begin Sprites/mario_walking.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -129,7 +201,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Mario_Walking.png
+/build:Sprites/mario_walking.png
 
 #begin Sprites/pole.png
 /importer:TextureImporter

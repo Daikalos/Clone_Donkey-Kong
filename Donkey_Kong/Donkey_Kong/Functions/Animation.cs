@@ -22,7 +22,7 @@ namespace Donkey_Kong
             this.myIsFinished = false;
         }
 
-        public void DrawSpriteSheet(SpriteBatch aSpriteBatch, GameTime aGameTime, Texture2D aTexture, Vector2 aPos, int aFrameWidth, int aFrameHeight, int aDestWidth, int aDestHeight, int someFramesInX, int someFramesInY, float aAnimationSpeed, SpriteEffects aSpriteEffect, bool aLoop)
+        public void DrawSpriteSheet(SpriteBatch aSpriteBatch, GameTime aGameTime, Texture2D aTexture, Vector2 aPos, Point aFrameSize, Point aDestSize, Point aFrameAmount, float aAnimationSpeed, Color aColor, SpriteEffects aSpriteEffect, bool aLoop)
         {
             if (myIsFinished) return;
 
@@ -31,7 +31,7 @@ namespace Donkey_Kong
             {
                 myCurrentFrame++;
                 myCurrentFramePos.X++;
-                if (myCurrentFrame >= (someFramesInX * someFramesInY))
+                if (myCurrentFrame >= (aFrameAmount.X * aFrameAmount.Y))
                 {
                     if (aLoop)
                     {
@@ -40,11 +40,11 @@ namespace Donkey_Kong
                     }
                     else
                     {
-                        myCurrentFrame = (someFramesInX * someFramesInY) - 1;
+                        myCurrentFrame = (aFrameAmount.X * aFrameAmount.Y) - 1;
                         myIsFinished = true;
                     }
                 }
-                if (myCurrentFramePos.X >= someFramesInX) //Animation
+                if (myCurrentFramePos.X >= aFrameAmount.X) //Animation
                 {
                     myCurrentFramePos.Y++;
                     myCurrentFramePos.X = 0;
@@ -53,9 +53,9 @@ namespace Donkey_Kong
             }
 
             aSpriteBatch.Draw(aTexture,
-                new Rectangle((int)aPos.X, (int)aPos.Y, aDestWidth, aDestHeight),
-                new Rectangle(aFrameWidth * myCurrentFramePos.X, aFrameHeight * myCurrentFramePos.Y, aFrameWidth, aFrameHeight),
-                Color.White, 0.0f, Vector2.Zero, aSpriteEffect, 0.0f);
+                new Rectangle((int)aPos.X, (int)aPos.Y, aDestSize.X, aDestSize.Y),
+                new Rectangle(aFrameSize.X * myCurrentFramePos.X, aFrameSize.Y * myCurrentFramePos.Y, aFrameSize.X, aFrameSize.Y),
+                aColor, 0.0f, Vector2.Zero, aSpriteEffect, 0.0f);
         }
     }
 }

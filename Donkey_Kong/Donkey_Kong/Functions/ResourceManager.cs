@@ -6,44 +6,41 @@ namespace Donkey_Kong
 {
     static class ResourceManager
     {
-        static SortedDictionary<string, Texture2D> myTextures;
-        static SortedDictionary<string, SoundEffect> mySoundEffects;
         static SortedDictionary<string, SpriteFont> myFonts;
+        static SortedDictionary<string, SoundEffectInstance> mySEInstances; //SoundEffects
+        static SortedDictionary<string, Texture2D> myTextures;
 
         public static void Initialize()
         {
             myTextures = new SortedDictionary<string, Texture2D>();
-            mySoundEffects = new SortedDictionary<string, SoundEffect>();
+            mySEInstances = new SortedDictionary<string, SoundEffectInstance>();
             myFonts = new SortedDictionary<string, SpriteFont>();
-        }
-
-        public static void AddTexture(string aTextureName, Texture2D aTexture)
-        {
-            myTextures.Add(aTextureName, aTexture);
         }
 
         public static void AddFont(string aFontName, SpriteFont aFont)
         {
             myFonts.Add(aFontName, aFont);
         }
-
-        public static void RemoveTexture(string aTextureName)
+        public static void AddTexture(string aTextureName, Texture2D aTexture)
         {
-            myTextures.Remove(aTextureName);
+            myTextures.Add(aTextureName, aTexture);
+        }
+        public static void AddSound(string aSoundName, SoundEffect aSoundEffect)
+        {
+            mySEInstances.Add(aSoundName, aSoundEffect.CreateInstance());
         }
 
         public static void RemoveFont(string aFontName)
         {
             myFonts.Remove(aFontName);
         }
-
-        public static Texture2D RequestTexture(string aTextureName)
+        public static void RemoveTexture(string aTextureName)
         {
-            if (myTextures.ContainsKey(aTextureName)) //Check if list contains the texture
-            {
-                return myTextures[aTextureName]; //Return texture
-            }
-            return null; //ERROR
+            myTextures.Remove(aTextureName);
+        }
+        public static void RemoveSound(string aSoundName)
+        {
+            mySEInstances.Remove(aSoundName);
         }
 
         public static SpriteFont RequestFont(string aFontName)
@@ -53,6 +50,35 @@ namespace Donkey_Kong
                 return myFonts[aFontName];
             }
             return null;
+        }
+        public static Texture2D RequestTexture(string aTextureName)
+        {
+            if (myTextures.ContainsKey(aTextureName)) //Check if list contains the texture
+            {
+                return myTextures[aTextureName]; //Return texture
+            }
+            return null; //ERROR
+        }
+
+        public static void PlaySound(string aSoundName)
+        {
+            if (mySEInstances.ContainsKey(aSoundName)) 
+            {
+                if (mySEInstances[aSoundName].State != SoundState.Playing)
+                {
+                    mySEInstances[aSoundName].Play();
+                }
+            }
+        }
+        public static void StopSound(string aSoundName)
+        {
+            if (mySEInstances.ContainsKey(aSoundName))
+            {
+                if (mySEInstances[aSoundName].State == SoundState.Playing)
+                {
+                    mySEInstances[aSoundName].Stop();
+                }
+            }
         }
     }
 }

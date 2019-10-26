@@ -6,8 +6,8 @@ namespace Donkey_Kong
 {
     class Level
     {
-        string[] myLevelBuilder;
-        Tile[,] myTiles;
+        private string[] myLevelBuilder;
+        private Tile[,] myTiles;
 
         public Tile[,] Tiles
         {
@@ -61,11 +61,17 @@ namespace Donkey_Kong
 
         public void SetTileTexture()
         {
+            int tempItem = 0;
             for (int i = 0; i < myTiles.GetLength(0); i++)
             {
                 for (int j = 0; j < myTiles.GetLength(1); j++)
                 {
                     myTiles[i, j].SetTexture();
+                    if (myTiles[i, j].TileType == '/')
+                    {
+                        myTiles[i, j].SetItemSourceRect(tempItem);
+                        tempItem++;
+                    }
                 }
             }
         }

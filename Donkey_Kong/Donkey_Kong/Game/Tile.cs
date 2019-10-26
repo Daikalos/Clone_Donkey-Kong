@@ -7,7 +7,9 @@ namespace Donkey_Kong
     {
         Texture2D myTexture;
         Vector2 myPosition;
-        Rectangle myBoundingBox;
+        Rectangle 
+            myBoundingBox,
+            mySourceRect;
         Point mySize;
         char myTileType;
 
@@ -16,6 +18,7 @@ namespace Donkey_Kong
         /// @ = Ladder;
         /// % = BridgeLadder;
         /// ? = Pins; 
+        /// / = Item;
         /// . = Empty;
         /// </summary>
         public char TileType
@@ -38,15 +41,18 @@ namespace Donkey_Kong
         {
             this.myPosition = aPosition;
             this.mySize = aSize;
+
             this.myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, aSize.X, aSize.Y);
         }
 
         public void Draw(SpriteBatch aSpriteBatch)
         {
-            if (myTexture != null)
-            {
-                aSpriteBatch.Draw(myTexture, new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y), null, Color.White);
-            }
+            aSpriteBatch.Draw(myTexture, myBoundingBox, mySourceRect, Color.White);
+        }
+
+        public void SetItemSourceRect(int aXPos)
+        {
+            mySourceRect = new Rectangle((myTexture.Width / 3) * aXPos, 0, myTexture.Width / 3, myTexture.Height);
         }
 
         public void SetTexture()
@@ -67,12 +73,16 @@ namespace Donkey_Kong
                     break;
                 case '?':
                     myTexture = ResourceManager.RequestTexture("Sprint");
-                    myPosition.Y -= 4;
+                    myBoundingBox = new Rectangle((int)myPosition.X - 6, (int)myPosition.Y - 4, 52, 42);
+                    break;
+                case '/':
+                    myTexture = ResourceManager.RequestTexture("Items");
                     break;
                 case '.':
                     myTexture = ResourceManager.RequestTexture("Empty");
                     break;
             }
+            mySourceRect = new Rectangle(0, 0, myTexture.Width, myTexture.Height);
         }
     }
 }
