@@ -7,7 +7,7 @@ namespace Donkey_Kong
     static class ResourceManager
     {
         static SortedDictionary<string, SpriteFont> myFonts;
-        static SortedDictionary<string, SoundEffectInstance> mySEInstances; //SoundEffects
+        static SortedDictionary<string, SoundEffectInstance> mySEInstances; //SoundEffect
         static SortedDictionary<string, Texture2D> myTextures;
 
         public static void Initialize()
@@ -59,10 +59,18 @@ namespace Donkey_Kong
             }
             return null; //ERROR
         }
+        public static SoundEffectInstance RequestSoundEffect(string aSoundName)
+        {
+            if (mySEInstances.ContainsKey(aSoundName))
+            {
+                return mySEInstances[aSoundName];
+            }
+            return null; //ERROR
+        }
 
         public static void PlaySound(string aSoundName)
         {
-            if (mySEInstances.ContainsKey(aSoundName)) 
+            if (mySEInstances.ContainsKey(aSoundName))
             {
                 if (mySEInstances[aSoundName].State != SoundState.Playing)
                 {

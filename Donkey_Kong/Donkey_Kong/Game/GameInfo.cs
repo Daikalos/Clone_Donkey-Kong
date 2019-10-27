@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -60,6 +58,10 @@ namespace Donkey_Kong
             myHighScores = Array.ConvertAll(tempScores, s => Int32.Parse(s));
             Array.Sort(myHighScores);
             Array.Reverse(myHighScores);
+        }
+        public static void SaveHighScore(string aPath)
+        {
+            File.AppendAllText(aPath, Environment.NewLine + "HighScore=" + (myScore + myBonusScore).ToString());
         }
 
         public static void Update(GameTime aGameTime)

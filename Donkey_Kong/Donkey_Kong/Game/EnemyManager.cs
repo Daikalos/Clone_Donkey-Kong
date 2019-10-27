@@ -8,16 +8,23 @@ namespace Donkey_Kong
     static class EnemyManager
     {
         private static List<Enemy> myEnemies;
+        private static Vector2 mySpawnPos;
         private static Point myEnemySpeed;
         private static int myMaxEnemies;
         private static float
             mySpawnTimer,
             mySpawnTimerMax;
 
-        public static void Initialize(Point aEnemySpeed, float aSpawnTimerMax, int someMaxEnemies)
+        public static List<Enemy> Enemies
         {
-            mySpawnTimerMax = aSpawnTimerMax;
+            get => myEnemies;
+        }
+
+        public static void Initialize(Vector2 aSpawnPos, Point aEnemySpeed, float aSpawnTimerMax, int someMaxEnemies)
+        {
+            mySpawnPos = aSpawnPos;
             myEnemySpeed = aEnemySpeed;
+            mySpawnTimerMax = aSpawnTimerMax;
             myMaxEnemies = someMaxEnemies;
 
             mySpawnTimer = 0;
@@ -57,7 +64,9 @@ namespace Donkey_Kong
         public static void AddEnemy(GameWindow aWindow, Random aRNG, Player aPlayer)
         {
             float tempSpeed = aRNG.Next(myEnemySpeed.X, myEnemySpeed.Y);
-            Vector2 tempSpawnPos = new Vector2((aWindow.ClientBounds.Width / 2) - 40, aWindow.ClientBounds.Height - (120 * (aRNG.Next(0, 4) + 1) + 60));
+            Vector2 tempSpawnPos = new Vector2(
+                mySpawnPos.X - Level.TileSize.X, 
+                mySpawnPos.Y - ((Level.TileSize.Y * 3) * (aRNG.Next(0, 4) + 1) + 60));
 
             if (Vector2.Distance(tempSpawnPos, aPlayer.Position) < 100.0f)
             {

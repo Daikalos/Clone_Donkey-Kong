@@ -5,46 +5,71 @@ namespace Donkey_Kong
 {
     class Animation
     {
+        //Animation-Info
         int myCurrentFrame;
         Point myCurrentFramePos;
-        bool myIsFinished;
+        bool 
+            myIsFinished,
+            myAtLastFrame;
         float myTimer;
+
+        //Texture-Info
+        Point
+            myFrameAmount;
+        float myAnimationSpeed;
+        bool
+            myIsLoop,
+            myStopLastFrame;
 
         public bool IsFinished
         {
             get => myIsFinished;
             set => myIsFinished = value;
         }
-
-        public Animation()
+        public bool AtLastFrame
+        {
+            get => myAtLastFrame;
+        }
+        public Animation(Point aFrameAmount, float aAnimationSpeed, bool aIsLoop, bool aStopLastFrame)
         {
             this.myCurrentFrame = 0;
             this.myIsFinished = false;
+            this.myAtLastFrame = false;
+
+            this.myFrameAmount = aFrameAmount;
+            this.myAnimationSpeed = aAnimationSpeed;
+            this.myIsLoop = aIsLoop;
+            this.myStopLastFrame = aStopLastFrame;
         }
 
-        public void DrawSpriteSheet(SpriteBatch aSpriteBatch, GameTime aGameTime, Texture2D aTexture, Vector2 aPos, Point aFrameSize, Point aDestSize, Point aFrameAmount, float aAnimationSpeed, Color aColor, SpriteEffects aSpriteEffect, bool aLoop)
+        public void DrawSpriteSheet(SpriteBatch aSpriteBatch, GameTime aGameTime, Texture2D aTexture, Vector2 aPos, Point aFrameSize, Point aDestSize, Color aColor, SpriteEffects aSpriteEffect)
         {
             if (myIsFinished) return;
 
             myTimer += (float)aGameTime.ElapsedGameTime.TotalSeconds;
-            if (myTimer > aAnimationSpeed) 
+            if (myTimer > myAnimationSpeed)
             {
                 myCurrentFrame++;
                 myCurrentFramePos.X++;
-                if (myCurrentFrame >= (aFrameAmount.X * aFrameAmount.Y))
+                if (myCurrentFrame >= (myFrameAmount.X * myFrameAmount.Y))
                 {
-                    if (aLoop)
+                    if (myStopLastFrame)
+                    {
+                        myCurrentFramePos = new Point(myFrameAmount.X - 1, myFrameAmount.Y - 1);
+                        myAtLastFrame = true;
+                    }
+                    else if (myIsLoop)
                     {
                         myCurrentFrame = 0;
                         myCurrentFramePos = new Point(0, 0);
                     }
                     else
                     {
-                        myCurrentFrame = (aFrameAmount.X * aFrameAmount.Y) - 1;
+                        myCurrentFrame = (myFrameAmount.X * myFrameAmount.Y) - 1;
                         myIsFinished = true;
                     }
                 }
-                if (myCurrentFramePos.X >= aFrameAmount.X) //Animation
+                if (myCurrentFramePos.X >= myFrameAmount.X) //Animation
                 {
                     myCurrentFramePos.Y++;
                     myCurrentFramePos.X = 0;

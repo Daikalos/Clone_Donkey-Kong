@@ -19,6 +19,7 @@
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/dk_laughing.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/empty.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/enemy.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/heart.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/items.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/ladder.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/mario_death.png</File>
@@ -32,6 +33,7 @@
   </SourceFiles>
   <DestFiles>
     <File>Fonts/8-bit.spritefont</File>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

@@ -82,3 +82,4 @@ C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows
 C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\bridgePole.xnb
 C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\dk_falling.xnb
 C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\pauline.xnb
+C:\Users\Tobias\Documents\GitHub\Donkey_Kong\Donkey_Kong\Donkey_Kong\bin\Windows\x86\Debug\Content\Sprites\heart.xnb

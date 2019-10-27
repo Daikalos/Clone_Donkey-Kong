@@ -29,6 +29,10 @@ namespace Donkey_Kong
             mySwitchDestTimerMax;
         private bool myIsAlive;
 
+        public Rectangle BoundingBox
+        {
+            get => myBoundingBox;
+        }
         public bool IsAlive
         {
             get => myIsAlive;
@@ -99,11 +103,11 @@ namespace Donkey_Kong
                     myFlipSprite = SpriteEffects.FlipHorizontally;
                 }
 
-                if (Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).TileType == '%')
+                if (Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + Level.TileSize.Y)).TileType == '%')
                 {
                     if (aRNG.Next(0, 100) > 20)
                     {
-                        myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 120)).BoundingBox.Center.ToVector2();
+                        myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + (Level.TileSize.Y * 3))).BoundingBox.Center.ToVector2();
                         myPosition.X = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).Position.X;
                         myEnemyState = EnemyState.isClimbing;
                     }
@@ -112,7 +116,7 @@ namespace Donkey_Kong
                 {
                     if (aRNG.Next(0, 100) > 30)
                     {
-                        myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - 120)).BoundingBox.Center.ToVector2();
+                        myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - (Level.TileSize.Y * 3))).BoundingBox.Center.ToVector2();
                         myPosition.X = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).Position.X;
                         myEnemyState = EnemyState.isClimbing;
                     }
@@ -136,12 +140,16 @@ namespace Donkey_Kong
         public void MoveTo(Random aRNG, int aDirection)
         {
             Tile tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y));
-            for (int i = 1; i < aRNG.Next(0, 7) + 1; i++)
+            for (int i = 1; i < aRNG.Next(0, 6) + 1; i++)
             {
-                tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * i * aDirection), myBoundingBox.Center.Y + 40));
+                tempTile = Level.GetTileAtPos(new Vector2(
+                    myBoundingBox.Center.X - (Level.TileSize.X * i * aDirection), 
+                    myBoundingBox.Center.Y + Level.TileSize.Y));
                 if (tempTile.TileType == '.')
                 {
-                    tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * i * aDirection) + (40 * aDirection), myBoundingBox.Center.Y + 40));
+                    tempTile = Level.GetTileAtPos(new Vector2(
+                        myBoundingBox.Center.X - (Level.TileSize.X * i * aDirection) + (Level.TileSize.X * aDirection), 
+                        myBoundingBox.Center.Y + Level.TileSize.Y));
                     break;
                 }
             }

@@ -18,18 +18,18 @@ namespace Donkey_Kong
                     string[] tempFoundInfo;
                     int tempInfoSize = 0;
 
-                    string tempReadFile = File.ReadAllText(aPath);
-                    string[] tempSplitText = tempReadFile.Split(aSeperator);
-                    string[] tempFoundValues = new string[tempSplitText.Length];
-
-                    for (int i = 0; i < tempSplitText.Length; i++)
+                    string[] tempReadFile = File.ReadAllLines(aPath);
+                    string[] tempFoundValues = new string[tempReadFile.Length];
+                    for (int i = 0; i < tempReadFile.Length; i++)
                     {
-                        if (tempSplitText[i] == aName)
+                        string[] tempSplitText = tempReadFile[i].Split(aSeperator);
+                        if (tempSplitText[0] == aName)
                         {
                             tempInfoSize++;
-                            tempFoundValues[i] = tempSplitText[i + 1];
+                            tempFoundValues[i] = tempSplitText[1];
                         }
                     }
+
                     tempFoundInfo = new string[tempInfoSize];
                     for (int i = 0; i < tempFoundValues.Length; i++)
                     {
