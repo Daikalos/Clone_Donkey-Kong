@@ -35,6 +35,7 @@ namespace Donkey_Kong
         public Vector2 Position
         {
             get => myPosition;
+            set => myPosition = value;
         }
 
         public Tile(Vector2 aPosition, Point aSize)
@@ -42,7 +43,12 @@ namespace Donkey_Kong
             this.myPosition = aPosition;
             this.mySize = aSize;
 
-            this.myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, aSize.X, aSize.Y);
+            this.myBoundingBox = new Rectangle((int)aPosition.X, (int)aPosition.Y, aSize.X, aSize.Y);
+        }
+
+        public void Update()
+        {
+            myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
         }
 
         public void Draw(SpriteBatch aSpriteBatch)

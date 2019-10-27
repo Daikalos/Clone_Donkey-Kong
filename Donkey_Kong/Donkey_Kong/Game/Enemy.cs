@@ -14,7 +14,7 @@ namespace Donkey_Kong
 
         private Texture2D myTexture;
 
-        private Vector2 
+        private Vector2
             myPosition,
             myDirection,
             myDestination;
@@ -23,7 +23,7 @@ namespace Donkey_Kong
         private EnemyState myEnemyState;
         private SpriteEffects myFlipSprite;
 
-        private float 
+        private float
             mySpeed,
             mySwitchDestTimer,
             mySwitchDestTimerMax;
@@ -47,14 +47,14 @@ namespace Donkey_Kong
             this.myIsAlive = true;
         }
 
-        public void Update(GameTime aGameTime, Random aRNG, Level aLevel)
+        public void Update(GameTime aGameTime, Random aRNG)
         {
             myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
 
             switch (myEnemyState)
             {
                 case EnemyState.isWalking:
-                    Movement(aGameTime, aRNG, aLevel);
+                    Movement(aGameTime, aRNG);
                     break;
                 case EnemyState.isClimbing:
                     Climbing(aGameTime);
@@ -82,7 +82,7 @@ namespace Donkey_Kong
                 myEnemyState = EnemyState.isWalking;
             }
         }
-        private void Movement(GameTime aGameTime, Random aRNG, Level aLevel)
+        private void Movement(GameTime aGameTime, Random aRNG)
         {
             mySwitchDestTimer += (float)aGameTime.ElapsedGameTime.TotalSeconds;
 
@@ -90,30 +90,30 @@ namespace Donkey_Kong
             {
                 if (aRNG.Next(0, 2) == 0)
                 {
-                    MoveTo(aRNG, aLevel, 1);
+                    MoveTo(aRNG, 1);
                     myFlipSprite = SpriteEffects.None;
                 }
                 else
                 {
-                    MoveTo(aRNG, aLevel, -1);
+                    MoveTo(aRNG, -1);
                     myFlipSprite = SpriteEffects.FlipHorizontally;
                 }
 
-                if (aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).TileType == '%')
+                if (Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).TileType == '%')
                 {
                     if (aRNG.Next(0, 100) > 20)
                     {
-                        myDestination = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 120)).BoundingBox.Center.ToVector2();
-                        myPosition.X = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).Position.X;
+                        myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 120)).BoundingBox.Center.ToVector2();
+                        myPosition.X = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).Position.X;
                         myEnemyState = EnemyState.isClimbing;
                     }
                 }
-                if (aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).TileType == '@')
+                if (Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).TileType == '@')
                 {
                     if (aRNG.Next(0, 100) > 30)
                     {
-                        myDestination = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - 120)).BoundingBox.Center.ToVector2();
-                        myPosition.X = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).Position.X;
+                        myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - 120)).BoundingBox.Center.ToVector2();
+                        myPosition.X = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).Position.X;
                         myEnemyState = EnemyState.isClimbing;
                     }
                 }
@@ -133,19 +133,18 @@ namespace Donkey_Kong
                 myPosition.X = myDestination.X - mySize.X / 2;
             }
         }
-        public void MoveTo(Random aRNG, Level aLevel, int aDirection)
+        public void MoveTo(Random aRNG, int aDirection)
         {
-            Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y));
+            Tile tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y));
             for (int i = 1; i < aRNG.Next(0, 7) + 1; i++)
             {
-                tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * i * aDirection), myBoundingBox.Center.Y + 40));
+                tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * i * aDirection), myBoundingBox.Center.Y + 40));
                 if (tempTile.TileType == '.')
                 {
-                    tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * i * aDirection) + (40 * aDirection), myBoundingBox.Center.Y + 40));
+                    tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * i * aDirection) + (40 * aDirection), myBoundingBox.Center.Y + 40));
                     break;
                 }
             }
-
             myDestination = tempTile.BoundingBox.Center.ToVector2();
         }
 

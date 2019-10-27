@@ -5,26 +5,26 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Donkey_Kong
 {
-    class EnemyManager
+    static class EnemyManager
     {
-        private List<Enemy> myEnemies;
-        private Point myEnemySpeed;
-        private int myMaxEnemies;
-        private float
+        private static List<Enemy> myEnemies;
+        private static Point myEnemySpeed;
+        private static int myMaxEnemies;
+        private static float
             mySpawnTimer,
             mySpawnTimerMax;
 
-        public EnemyManager(Point aEnemySpeed, float aSpawnTimerMax, int someMaxEnemies)
+        public static void Initialize(Point aEnemySpeed, float aSpawnTimerMax, int someMaxEnemies)
         {
-            this.mySpawnTimerMax = aSpawnTimerMax;
-            this.myEnemySpeed = aEnemySpeed;
-            this.myMaxEnemies = someMaxEnemies;
+            mySpawnTimerMax = aSpawnTimerMax;
+            myEnemySpeed = aEnemySpeed;
+            myMaxEnemies = someMaxEnemies;
 
             mySpawnTimer = 0;
             myEnemies = new List<Enemy>();
         }
 
-        public void Update(GameWindow aWindow, GameTime aGameTime, Random aRNG, Level aLevel, Player aPlayer)
+        public static void Update(GameWindow aWindow, GameTime aGameTime, Random aRNG, Player aPlayer)
         {
             if (myEnemies.Count < myMaxEnemies)
             {
@@ -38,7 +38,7 @@ namespace Donkey_Kong
 
             for (int i = myEnemies.Count; i > 0; i--)
             {
-                myEnemies[i - 1].Update(aGameTime, aRNG, aLevel);
+                myEnemies[i - 1].Update(aGameTime, aRNG);
                 if (!myEnemies[i - 1].IsAlive)
                 {
                     myEnemies.RemoveAt(i - 1);
@@ -46,7 +46,7 @@ namespace Donkey_Kong
             }
         }
 
-        public void Draw(SpriteBatch aSpriteBatch)
+        public static void Draw(SpriteBatch aSpriteBatch)
         {
             for (int i = myEnemies.Count; i > 0; i--)
             {
@@ -54,7 +54,7 @@ namespace Donkey_Kong
             }
         }
 
-        public void AddEnemy(GameWindow aWindow, Random aRNG, Player aPlayer)
+        public static void AddEnemy(GameWindow aWindow, Random aRNG, Player aPlayer)
         {
             float tempSpeed = aRNG.Next(myEnemySpeed.X, myEnemySpeed.Y);
             Vector2 tempSpawnPos = new Vector2((aWindow.ClientBounds.Width / 2) - 40, aWindow.ClientBounds.Height - (120 * (aRNG.Next(0, 4) + 1) + 60));
@@ -63,10 +63,16 @@ namespace Donkey_Kong
             {
                 AddEnemy(aWindow, aRNG, aPlayer);
             }
-
-            Enemy tempEnemy = new Enemy(tempSpawnPos, new Point(40), tempSpeed, 1.5f);
-            tempEnemy.SetTexture("Enemy");
-            myEnemies.Add(tempEnemy);
+            else
+            {
+                Enemy tempEnemy = new Enemy(tempSpawnPos, new Point(40), tempSpeed, 1.5f);
+                tempEnemy.SetTexture("Enemy");
+                myEnemies.Add(tempEnemy);
+            }
+        }
+        public static void RemoveAll()
+        {
+            myEnemies.RemoveAll(x => x.IsAlive);
         }
     }
 }

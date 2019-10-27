@@ -16,7 +16,9 @@ namespace Donkey_Kong
             isDead
         }
 
-        private Texture2D myTexture;
+        private Texture2D 
+            myTexture,
+            myMarioHPTexture;
         private Animation 
             myWalkingAnimation,
             myDeathAnimation;
@@ -44,6 +46,10 @@ namespace Donkey_Kong
             myJumpAvailable,
             myIsDead;
 
+        public Texture2D MarioHPTexture
+        {
+            get => myMarioHPTexture;
+        }
         public Vector2 Position
         {
             get => myPosition;
@@ -70,20 +76,21 @@ namespace Donkey_Kong
             this.myDestination = new Vector2(myPosition.X + mySize.X / 2, myPosition.Y);
             this.myDirection = Vector2.Zero;
             this.myMarioColor = Color.White;
+            this.myMarioHPTexture = ResourceManager.RequestTexture("Mario_Lives");
             this.myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
         }
 
-        public void Update(GameWindow aWindow, GameTime aGameTime, Level aLevel)
+        public void Update(GameWindow aWindow, GameTime aGameTime)
         {
             myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
 
             switch (myPlayerState)
             {
                 case PlayerState.isWalking:
-                    Movement(aWindow, aGameTime, aLevel);
+                    Movement(aWindow, aGameTime);
                     break;
                 case PlayerState.isClimbing:
-                    Climbing(aGameTime, aLevel);
+                    Climbing(aGameTime);
                     break;
                 case PlayerState.isJumping:
                     Jumping(aGameTime);
@@ -98,7 +105,7 @@ namespace Donkey_Kong
             }
 
             Invincibility(aGameTime);
-            CollisionChecking(aGameTime, aLevel);
+            CollisionChecking(aGameTime);
         }
 
         public void Draw(SpriteBatch aSpriteBatch, GameTime aGameTime)
@@ -131,18 +138,18 @@ namespace Donkey_Kong
             }
         }
 
-        private void Movement(GameWindow aWindow, GameTime aGameTime, Level aLevel)
+        private void Movement(GameWindow aWindow, GameTime aGameTime)
         {
-            if (KeyMouseReader.KeyHold(Keys.Left) && OutsideBounds(aWindow, aLevel) != -1)
+            if (KeyMouseReader.KeyHold(Keys.Left) && OutsideBounds(aWindow) != -1)
             {
-                myDestination = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X - 40, myBoundingBox.Center.Y)).BoundingBox.Center.ToVector2();
+                myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X - 40, myBoundingBox.Center.Y)).BoundingBox.Center.ToVector2();
 
                 myFlipSprite = SpriteEffects.FlipHorizontally;
                 myIsMoving = true;
             }
-            if (KeyMouseReader.KeyHold(Keys.Right) && OutsideBounds(aWindow, aLevel) != 1)
+            if (KeyMouseReader.KeyHold(Keys.Right) && OutsideBounds(aWindow) != 1)
             {
-                myDestination = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X + 40, myBoundingBox.Center.Y)).BoundingBox.Center.ToVector2();
+                myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X + 40, myBoundingBox.Center.Y)).BoundingBox.Center.ToVector2();
 
                 myFlipSprite = SpriteEffects.None;
                 myIsMoving = true;
@@ -166,7 +173,7 @@ namespace Donkey_Kong
                 ResourceManager.StopSound("Walking");
             }
 
-            if (KeyMouseReader.KeyPressed(Keys.Space) && myJumpAvailable && aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).TileType != '.')
+            if (KeyMouseReader.KeyPressed(Keys.Space) && myJumpAvailable && Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).TileType != '.')
             {
                 myPlayerState = PlayerState.isJumping;
                 myVelocity = myJumpHeight;
@@ -181,7 +188,7 @@ namespace Donkey_Kong
                     {
                         if (myFlipSprite == SpriteEffects.None)
                         {
-                            Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X + (40 * (i - 1)), myBoundingBox.Center.Y + 40));
+                            Tile tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X + (40 * (i - 1)), myBoundingBox.Center.Y + 40));
                             if (tempTile.TileType == '#' || tempTile.TileType == '%')
                             {
                                 myDestination = tempTile.BoundingBox.Center.ToVector2();
@@ -190,7 +197,7 @@ namespace Donkey_Kong
                         }
                         else
                         {
-                            Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * (i - 1)), myBoundingBox.Center.Y + 40));
+                            Tile tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X - (40 * (i - 1)), myBoundingBox.Center.Y + 40));
                             if (tempTile.TileType == '#' || tempTile.TileType == '%')
                             {
                                 myDestination = tempTile.BoundingBox.Center.ToVector2();
@@ -203,15 +210,15 @@ namespace Donkey_Kong
                 SetTexture("Mario_Jumping");
             }
         }
-        private void Climbing(GameTime aGameTime, Level aLevel)
+        private void Climbing(GameTime aGameTime)
         {
             if (KeyMouseReader.KeyHold(Keys.Up))
             {
-                myDestination = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - 40)).BoundingBox.Center.ToVector2();
+                myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - 40)).BoundingBox.Center.ToVector2();
             }
-            if (KeyMouseReader.KeyHold(Keys.Down) && aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).TileType != '#')
+            if (KeyMouseReader.KeyHold(Keys.Down) && Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).TileType != '#')
             {
-                myDestination = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).BoundingBox.Center.ToVector2();
+                myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).BoundingBox.Center.ToVector2();
             }
 
             if (Math.Abs(myBoundingBox.Center.ToVector2().Y - myDestination.Y) > 1.0f)
@@ -255,18 +262,27 @@ namespace Donkey_Kong
                 myMarioColor = Color.White;
             }
         }
-
-        private void CollisionChecking(GameTime aGameTime, Level aLevel)
+        public void TakeDamage()
         {
-            IsFalling(aLevel);
-            CollisionBlock(aGameTime, aLevel);
-            CollisionLadder(aLevel);
-            CollisionSprint(aLevel);
-            CollisionItem(aLevel);
+            if (myInvincibilityFrames <= 0)
+            {
+                myHealth--;
+                myMarioColor = new Color(0, 60, 120, 210.0f);
+                myInvincibilityFrames = 2.0f;
+            }
         }
-        private void IsFalling(Level aLevel)
+
+        private void CollisionChecking(GameTime aGameTime)
         {
-            Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40));
+            IsFalling();
+            CollisionBlock(aGameTime);
+            CollisionLadder();
+            CollisionSprint();
+            CollisionItem();
+        }
+        private void IsFalling()
+        {
+            Tile tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40));
             if (Math.Abs(myBoundingBox.Center.X - tempTile.BoundingBox.Center.X) <= 1.0f && myPlayerState != PlayerState.isJumping)
             {
                 if (tempTile.TileType == '.')
@@ -280,9 +296,9 @@ namespace Donkey_Kong
                 }
             }
         }
-        private void CollisionBlock(GameTime aGameTime, Level aLevel)
+        private void CollisionBlock(GameTime aGameTime)
         {
-            Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40));
+            Tile tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40));
             if (myPlayerState != PlayerState.isClimbing && myPosition.Y + (myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds) >= tempTile.BoundingBox.Y - mySize.Y)
             {
                 if (tempTile.TileType == '#' || tempTile.TileType == '%')
@@ -297,13 +313,13 @@ namespace Donkey_Kong
                 }
             }
         }
-        private void CollisionLadder(Level aLevel)
+        private void CollisionLadder()
         {
             if (!myIsMoving)
             {
                 if (myPlayerState != PlayerState.isClimbing)
                 {
-                    if (aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).TileType == '@')
+                    if (Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).TileType == '@')
                     {
                         if (KeyMouseReader.KeyHold(Keys.Up))
                         {
@@ -311,7 +327,7 @@ namespace Donkey_Kong
                             SetTexture("Mario_Jumping");
                         }
                     }
-                    if (aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).TileType == '%')
+                    if (Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).TileType == '%')
                     {
                         if (KeyMouseReader.KeyHold(Keys.Down))
                         {
@@ -324,10 +340,10 @@ namespace Donkey_Kong
                 {
                     if (Math.Abs(myBoundingBox.Center.ToVector2().Y - myDestination.Y) < 1.0f)
                     {
-                        Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40));
+                        Tile tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40));
                         if (tempTile.TileType == '%' || tempTile.TileType == '#')
                         {
-                            myPosition.Y = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).BoundingBox.Y - myBoundingBox.Height;
+                            myPosition.Y = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40)).BoundingBox.Y - myBoundingBox.Height;
                             myJumpAvailable = true;
 
                             myPlayerState = PlayerState.isWalking;
@@ -337,11 +353,11 @@ namespace Donkey_Kong
                 }
             }
         }
-        private void CollisionSprint(Level aLevel)
+        private void CollisionSprint()
         {
             for (int i = 1; i <= 2; i++)
             {
-                Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40 * i));
+                Tile tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + 40 * i));
                 if (tempTile.TileType == '?')
                 {
                     tempTile.TileType = '.';
@@ -352,9 +368,9 @@ namespace Donkey_Kong
                 }
             }
         }
-        private void CollisionItem(Level aLevel)
+        private void CollisionItem()
         {
-            Tile tempTile = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y));
+            Tile tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y));
             if (tempTile.TileType == '/')
             {
                 tempTile.TileType = '.';
@@ -364,16 +380,16 @@ namespace Donkey_Kong
                 GameInfo.AddScore(tempTile.BoundingBox.Center.ToVector2(), 100);
             }
         }
-        private int OutsideBounds(GameWindow aWindow, Level aLevel)
+        private int OutsideBounds(GameWindow aWindow)
         {
-            if (aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X - 40, myBoundingBox.Center.Y)).Position == Vector2.Zero) //Will return myTiles[0, 0] position if outside grid
+            if (Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X - 40, myBoundingBox.Center.Y)).Position == Vector2.Zero) //Will return myTiles[0, 0] position if outside grid
             {
-                myDestination = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - 40)).BoundingBox.Center.ToVector2();
+                myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - 40)).BoundingBox.Center.ToVector2();
                 return -1;
             }
-            if (aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X + 40, myBoundingBox.Center.Y)).Position == Vector2.Zero)
+            if (Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X + 40, myBoundingBox.Center.Y)).Position == Vector2.Zero)
             {
-                myDestination = aLevel.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - 40)).BoundingBox.Center.ToVector2();
+                myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - 40)).BoundingBox.Center.ToVector2();
                 return 1;
             }
             if (myPosition.Y > aWindow.ClientBounds.Height) //Safety measure
@@ -384,18 +400,13 @@ namespace Donkey_Kong
             return 0;
         }
 
-        public void TakeDamage()
-        {
-            if (myInvincibilityFrames <= 0)
-            {
-                myHealth--;
-                myMarioColor = new Color(0, 60, 120, 210.0f);
-                myInvincibilityFrames = 2.0f;
-            }
-        }
         public void SetTexture(string aTextureName)
         {
             myTexture = ResourceManager.RequestTexture(aTextureName);
+        }
+        public void SetMarioHPTexture()
+        {
+            myMarioHPTexture = ResourceManager.RequestTexture("Mario_Lives");
         }
     }
 }

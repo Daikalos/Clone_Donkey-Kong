@@ -14,6 +14,7 @@
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/bridge.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/bridgeLadder.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/bridgePole.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/dk_falling.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/dk_idle.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/dk_laughing.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/empty.png</File>
@@ -24,12 +25,15 @@
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/mario_jumping.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/mario_lives.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/mario_walking.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/pauline.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/pole.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/sprint.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/start.png</File>
   </SourceFiles>
   <DestFiles>
     <File>Fonts/8-bit.spritefont</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
