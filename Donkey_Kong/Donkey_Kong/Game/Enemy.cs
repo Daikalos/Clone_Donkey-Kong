@@ -105,7 +105,7 @@ namespace Donkey_Kong
 
                 if (Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + Level.TileSize.Y)).TileType == '%')
                 {
-                    if (aRNG.Next(0, 100) > 20)
+                    if (aRNG.Next(0, 100) > 70)
                     {
                         myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + (Level.TileSize.Y * 3))).BoundingBox.Center.ToVector2();
                         myPosition.X = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).Position.X;
@@ -114,7 +114,7 @@ namespace Donkey_Kong
                 }
                 if (Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).TileType == '@')
                 {
-                    if (aRNG.Next(0, 100) > 30)
+                    if (aRNG.Next(0, 100) > 80)
                     {
                         myDestination = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y - (Level.TileSize.Y * 3))).BoundingBox.Center.ToVector2();
                         myPosition.X = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y)).Position.X;

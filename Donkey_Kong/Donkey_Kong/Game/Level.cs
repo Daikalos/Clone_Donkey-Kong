@@ -196,7 +196,7 @@ namespace Donkey_Kong
                         tempTile.TileType = '#';
                         tempTile.SetTexture();
                     }
-                    if (tempTile.TileType == '@' || tempTile.TileType == '/')
+                    if (tempTile.TileType == '@' || tempTile.TileType == '/' || tempTile.TileType == '"')
                     {
                         tempTile.TileType = '.';
                         tempTile.SetTexture();

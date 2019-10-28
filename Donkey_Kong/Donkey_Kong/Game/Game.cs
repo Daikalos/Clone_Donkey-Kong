@@ -49,7 +49,7 @@ namespace Donkey_Kong
 
             myRNG = new Random();
 
-            EnemyManager.Initialize(new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height), new Point(140, 180), 5.0f, 7);
+            EnemyManager.Initialize(new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height), new Point(140, 180), 3.5f, 7);
             GameInfo.Initialize(1.2f, 1.2f, 6000);
             ResourceManager.Initialize();
             myGameState = GameState.isOnMenu;
@@ -71,6 +71,7 @@ namespace Donkey_Kong
 
             ResourceManager.AddTexture("Mario_Walking", this.Content.Load<Texture2D>("Sprites/mario_walking"));
             ResourceManager.AddTexture("Mario_Jumping", this.Content.Load<Texture2D>("Sprites/mario_jumping"));
+            ResourceManager.AddTexture("Mario_Climbing", this.Content.Load<Texture2D>("Sprites/mario_climbing"));
             ResourceManager.AddTexture("Mario_Lives", this.Content.Load<Texture2D>("Sprites/mario_lives"));
             ResourceManager.AddTexture("Mario_Death", this.Content.Load<Texture2D>("Sprites/mario_death"));
             ResourceManager.AddTexture("Bridge", this.Content.Load<Texture2D>("Sprites/bridge"));
@@ -81,6 +82,7 @@ namespace Donkey_Kong
             ResourceManager.AddTexture("Sprint", this.Content.Load<Texture2D>("Sprites/sprint"));
             ResourceManager.AddTexture("Pole", this.Content.Load<Texture2D>("Sprites/pole"));
             ResourceManager.AddTexture("Items", this.Content.Load<Texture2D>("Sprites/items"));
+            ResourceManager.AddTexture("Hammer", this.Content.Load<Texture2D>("Sprites/hammer"));
             ResourceManager.AddTexture("Enemy", this.Content.Load<Texture2D>("Sprites/enemy"));
             ResourceManager.AddTexture("Menu", this.Content.Load<Texture2D>("Sprites/start"));
             ResourceManager.AddTexture("DK_Idle", this.Content.Load<Texture2D>("Sprites/dk_idle"));
@@ -134,7 +136,6 @@ namespace Donkey_Kong
                     Quit();
                     break;
                 case GameState.isPlaying:
-                    Level.Update();
                     Level.WinCondition(Window, gameTime, myPlayer);
                     if (!Level.LevelCleared)
                     {
@@ -149,6 +150,7 @@ namespace Donkey_Kong
                     }
                     else
                     {
+                        Level.Update();
                         LevelCleared();
                     }
                     break;
@@ -209,7 +211,7 @@ namespace Donkey_Kong
                 case GameState.isDead:
                     StringManager.DrawStringLeft(spriteBatch, my8BitFont, "GAME OVER", new Vector2(40, 40), Color.Red, 1.4f);
                     StringManager.DrawStringLeft(spriteBatch, my8BitFont, "Score", new Vector2(40, 80), Color.White, 1.1f);
-                    StringManager.DrawStringLeft(spriteBatch, my8BitFont, GameInfo.Score.ToString(), new Vector2(40, 110), Color.White, 1.0f);
+                    StringManager.DrawStringLeft(spriteBatch, my8BitFont, (GameInfo.Score + GameInfo.BonusScore).ToString(), new Vector2(40, 110), Color.White, 1.0f);
 
                     StringManager.DrawStringRight(spriteBatch, my8BitFont, "High Score", new Vector2(Window.ClientBounds.Width - 40, 40), Color.Red, 1.2f);
                     for (int i = 0; i < GameInfo.HighScores.Length; i++)
@@ -226,7 +228,7 @@ namespace Donkey_Kong
                 case GameState.isWon:
                     StringManager.DrawStringLeft(spriteBatch, my8BitFont, "YOU WIN", new Vector2(40, 40), Color.Yellow, 1.4f);
                     StringManager.DrawStringLeft(spriteBatch, my8BitFont, "Score", new Vector2(40, 80), Color.White, 1.1f);
-                    StringManager.DrawStringLeft(spriteBatch, my8BitFont, GameInfo.Score.ToString(), new Vector2(40, 110), Color.White, 1.0f);
+                    StringManager.DrawStringLeft(spriteBatch, my8BitFont, (GameInfo.Score + GameInfo.BonusScore).ToString(), new Vector2(40, 110), Color.White, 1.0f);
                     StringManager.DrawStringRight(spriteBatch, my8BitFont, "High Score", new Vector2(Window.ClientBounds.Width - 40, 40), Color.Red, 1.2f);
 
                     for (int i = 0; i < GameInfo.HighScores.Length; i++)

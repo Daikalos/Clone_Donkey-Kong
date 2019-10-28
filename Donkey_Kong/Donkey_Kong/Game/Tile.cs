@@ -19,6 +19,7 @@ namespace Donkey_Kong
         /// % = BridgeLadder;
         /// ? = Pins; 
         /// / = Item;
+        /// " = Hammer;
         /// . = Empty;
         /// </summary>
         public char TileType
@@ -86,6 +87,9 @@ namespace Donkey_Kong
                     break;
                 case '/':
                     myTexture = ResourceManager.RequestTexture("Items");
+                    break;
+                case '"':
+                    myTexture = ResourceManager.RequestTexture("Hammer");
                     break;
                 case '.':
                     myTexture = ResourceManager.RequestTexture("Empty");
