@@ -72,6 +72,7 @@ namespace Donkey_Kong
             ResourceManager.AddTexture("Mario_Walking", this.Content.Load<Texture2D>("Sprites/mario_walking"));
             ResourceManager.AddTexture("Mario_Jumping", this.Content.Load<Texture2D>("Sprites/mario_jumping"));
             ResourceManager.AddTexture("Mario_Climbing", this.Content.Load<Texture2D>("Sprites/mario_climbing"));
+            ResourceManager.AddTexture("Mario_Hammer", this.Content.Load<Texture2D>("Sprites/mario_hammer"));
             ResourceManager.AddTexture("Mario_Lives", this.Content.Load<Texture2D>("Sprites/mario_lives"));
             ResourceManager.AddTexture("Mario_Death", this.Content.Load<Texture2D>("Sprites/mario_death"));
             ResourceManager.AddTexture("Bridge", this.Content.Load<Texture2D>("Sprites/bridge"));

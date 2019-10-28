@@ -14,6 +14,7 @@ namespace Donkey_Kong
             isClimbing,
             isJumping,
             isFalling,
+            isUsingHammer,
             isDead
         }
 
@@ -88,6 +89,7 @@ namespace Donkey_Kong
             this.myDeathAnimation = new Animation(new Point(5, 2), 0.3f, false, true);
             this.myWalkingAnimation = new Animation(new Point(3, 1), 0.035f, true, false);
             this.myClimbingAnimation = new Animation(new Point(2, 1), 0.2f, true, false);
+            this.myHammerAnimation = new Animation(new Point(4, 1), 0.15f, true, false);
             this.myPlayerState = PlayerState.isFalling;
             this.myDestination = new Vector2(myPosition.X + mySize.X / 2, myPosition.Y);
             this.myDirection = Vector2.Zero;
@@ -104,6 +106,7 @@ namespace Donkey_Kong
             {
                 case PlayerState.isWalking:
                     Movement(aWindow, aGameTime);
+                    Jump();
                     break;
                 case PlayerState.isClimbing:
                     Climbing(aGameTime);
@@ -114,6 +117,9 @@ namespace Donkey_Kong
                 case PlayerState.isFalling:
                     myVelocity += myGravity;
                     myPosition.Y += myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    break;
+                case PlayerState.isUsingHammer:
+                    Movement(aWindow, aGameTime);
                     break;
                 case PlayerState.isDead:
                     break;
@@ -198,7 +204,9 @@ namespace Donkey_Kong
 
                 ResourceManager.StopSound("Walking");
             }
-
+        }
+        private void Jump()
+        {
             if (KeyMouseReader.KeyPressed(Keys.Space) && myJumpAvailable && Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + Level.TileSize.Y)).TileType != '.')
             {
                 myPlayerState = PlayerState.isJumping;
@@ -267,6 +275,7 @@ namespace Donkey_Kong
                 myPosition.X = myDestination.X - mySize.X / 2;
             }
         }
+
         private void Invincibility(GameTime aGameTime)
         {
             if (myInvincibilityFrames > 0)
@@ -423,6 +432,15 @@ namespace Donkey_Kong
 
                 ResourceManager.PlaySound("Item_Get");
                 GameInfo.AddScore(tempTile.BoundingBox.Center.ToVector2(), 100);
+            }
+            if (tempTile.TileType == '"')
+            {
+                tempTile.TileType = '.';
+                tempTile.SetTexture();
+
+                SetTexture("Mario_Hammer");
+                ResourceManager.PlaySound("Item_Get");
+                myPlayerState = PlayerState.isUsingHammer;
             }
         }
         private void CollisionEnemy()
