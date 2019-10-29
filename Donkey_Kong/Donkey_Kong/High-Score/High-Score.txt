@@ -1,11 +1,5 @@
 HighScore=136
 HighScore=900
 HighScore=1200
-HighScore=400
-HighScore=800
-HighScore=900
-HighScore=900
-HighScore=4300
-HighScore=4700
-HighScore=4400
-HighScore=5000
+HighScore=5200
+HighScore=1300

@@ -136,7 +136,7 @@ namespace Donkey_Kong
             if (!LevelCleared)
             {
                 SetDKPosition(aDKPos);
-                myDKIdleAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myDKTexture, myDKPosition, new Point(myDKTexture.Width / 4, myDKTexture.Height),
+                myDKIdleAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myDKTexture, myDKPosition, Vector2.Zero, new Point(myDKTexture.Width / 4, myDKTexture.Height),
                     new Point((myDKTexture.Width / 4), myDKTexture.Height), Color.White, SpriteEffects.None);
             }
             else
@@ -176,7 +176,7 @@ namespace Donkey_Kong
 
                 if (tempDropDK)
                 {
-                    DropDK(aGameTime, aPlayer);
+                    DropDK(aWindow, aGameTime, aPlayer);
                 }
             }
         }
@@ -225,12 +225,12 @@ namespace Donkey_Kong
             }
             return tempDropDK;
         }
-        private static void DropDK(GameTime aGameTime, Player aPlayer)
+        private static void DropDK(GameWindow aWindow, GameTime aGameTime, Player aPlayer)
         {
             SetDKTexture("DK_Falling");
 
             float tempFallSpeed = 250;
-            int tempFallHeight = (10 * 50) + 5;
+            int tempFallHeight = (int)Level.GetTileAtPos(new Vector2(0, aWindow.ClientBounds.Height - Level.TileSize.Y)).Position.Y - (myStackBridge * (Level.TileSize.Y)) + Level.TileSize.Y / 2;
 
             if (myDKPosition.Y + tempFallSpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds <= tempFallHeight)
             {

@@ -27,7 +27,7 @@ namespace Donkey_Kong
 
         private Texture2D 
             myMenuTexture,
-            myDKIdle,
+            myDKFalling,
             myDKLaughing;
 
         private Player myPlayer;
@@ -50,11 +50,11 @@ namespace Donkey_Kong
             myRNG = new Random();
 
             EnemyManager.Initialize(new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height), new Point(140, 180), 3.5f, 7);
-            GameInfo.Initialize(1.2f, 1.2f, 6000);
+            GameInfo.Initialize(1.2f, 1.2f, 100, 6000);
             ResourceManager.Initialize();
             myGameState = GameState.isOnMenu;
 
-            myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 60), new Point(40), 3, 170.0f, 120.0f, 15.5f, -320.0f);
+            myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 60), new Point(40), 3, 170.0f, 120.0f, 15.5f, -320.0f, 4.0f);
             Level.Initialize();
             Level.LoadLevel(@"../../../../Levels/Level01.txt");
 
@@ -75,6 +75,10 @@ namespace Donkey_Kong
             ResourceManager.AddTexture("Mario_Hammer", this.Content.Load<Texture2D>("Sprites/mario_hammer"));
             ResourceManager.AddTexture("Mario_Lives", this.Content.Load<Texture2D>("Sprites/mario_lives"));
             ResourceManager.AddTexture("Mario_Death", this.Content.Load<Texture2D>("Sprites/mario_death"));
+            ResourceManager.AddTexture("Pauline_Walking", this.Content.Load<Texture2D>("Sprites/pauline_walking"));
+            ResourceManager.AddTexture("Pauline_Jumping", this.Content.Load<Texture2D>("Sprites/pauline_jumping"));
+            ResourceManager.AddTexture("Pauline_Climbing", this.Content.Load<Texture2D>("Sprites/pauline_climbing"));
+            ResourceManager.AddTexture("Pauline_Death", this.Content.Load<Texture2D>("Sprites/pauline_death"));
             ResourceManager.AddTexture("Bridge", this.Content.Load<Texture2D>("Sprites/bridge"));
             ResourceManager.AddTexture("Ladder", this.Content.Load<Texture2D>("Sprites/ladder"));
             ResourceManager.AddTexture("BridgeLadder", this.Content.Load<Texture2D>("Sprites/bridgeLadder"));
@@ -108,7 +112,7 @@ namespace Donkey_Kong
             Level.SetHeartTexture("Heart");
 
             myMenuTexture = ResourceManager.RequestTexture("Menu");
-            myDKIdle = ResourceManager.RequestTexture("DK_Idle");
+            myDKFalling = ResourceManager.RequestTexture("DK_Falling");
             myDKLaughing = ResourceManager.RequestTexture("DK_Laughing");
 
             my8BitFont = ResourceManager.RequestFont("8-bit");
@@ -134,6 +138,7 @@ namespace Donkey_Kong
                     {
                         myGameState = GameState.isPlaying;
                     }
+                    SelectCharacter();
                     Quit();
                     break;
                 case GameState.isPlaying:
@@ -179,15 +184,16 @@ namespace Donkey_Kong
                 case GameState.isOnMenu:
                     spriteBatch.Draw(myMenuTexture, new Rectangle(Window.ClientBounds.Width / 4, 20, (Window.ClientBounds.Width / 2), (Window.ClientBounds.Height / 2)), null, Color.White);
                     StringManager.DrawStringMid(spriteBatch, my8BitFont, "Press ENTER to start", new Vector2(Window.ClientBounds.Width / 2, (Window.ClientBounds.Height / 2) + 80), Color.DarkOrange, 1.2f);
-                    StringManager.DrawStringLeft(spriteBatch, my8BitFont, "Press BACK to quit", new Vector2(10, Window.ClientBounds.Height - 10), Color.DarkOrange, 0.7f);
+                    StringManager.DrawStringLeft(spriteBatch, my8BitFont, "Press BACK to quit", new Vector2(20, Window.ClientBounds.Height - 20), Color.DarkOrange, 0.7f);
                     Level.DrawDK(spriteBatch, gameTime, new Vector2(
                         (Window.ClientBounds.Width / 2),
                         (Window.ClientBounds.Height / 2) + 160));
+                    StringManager.DrawStringRight(spriteBatch, my8BitFont, myPlayer.Character, new Vector2(Window.ClientBounds.Width - 20, Window.ClientBounds.Height - 20), Color.DarkOrange, 0.7f);
                     break;
                 case GameState.isPlaying:
                     Level.DrawTiles(spriteBatch);
                     Level.DrawDK(spriteBatch, gameTime,
-                        Level.GetTileAtPos(new Vector2(Window.ClientBounds.Width / 2, 120)).Position);
+                        Level.GetTileAtPos(new Vector2(Window.ClientBounds.Width / 2, Level.TileSize.Y * 3)).Position);
                     Level.DrawPauline(spriteBatch);
                     Level.DrawHeart(spriteBatch);
 
@@ -230,8 +236,8 @@ namespace Donkey_Kong
                     StringManager.DrawStringLeft(spriteBatch, my8BitFont, "YOU WIN", new Vector2(40, 40), Color.Yellow, 1.4f);
                     StringManager.DrawStringLeft(spriteBatch, my8BitFont, "Score", new Vector2(40, 80), Color.White, 1.1f);
                     StringManager.DrawStringLeft(spriteBatch, my8BitFont, (GameInfo.Score + GameInfo.BonusScore).ToString(), new Vector2(40, 110), Color.White, 1.0f);
-                    StringManager.DrawStringRight(spriteBatch, my8BitFont, "High Score", new Vector2(Window.ClientBounds.Width - 40, 40), Color.Red, 1.2f);
 
+                    StringManager.DrawStringRight(spriteBatch, my8BitFont, "High Score", new Vector2(Window.ClientBounds.Width - 40, 40), Color.Red, 1.2f);
                     for (int i = 0; i < GameInfo.HighScores.Length; i++)
                     {
                         if (i < 10)
@@ -240,6 +246,8 @@ namespace Donkey_Kong
                         }
                     }
 
+                    spriteBatch.Draw(myDKFalling, new Vector2((Window.ClientBounds.Width / 2) - myDKLaughing.Width / 2, (Window.ClientBounds.Height / 2) - 30), 
+                        new Rectangle(myDKFalling.Width / 2, 3, myDKFalling.Width, myDKFalling.Height), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.FlipVertically, 0.0f);
                     StringManager.DrawStringMid(spriteBatch, my8BitFont, "Press ENTER to play again", new Vector2(Window.ClientBounds.Width / 2, (Window.ClientBounds.Height / 2) + 150), Color.DarkOrange, 1.1f);
                     break;
             }
@@ -247,6 +255,18 @@ namespace Donkey_Kong
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void SelectCharacter()
+        {
+            if (KeyMouseReader.KeyPressed(Keys.Left))
+            {
+                myPlayer.Character = "Mario";
+            }
+            if (KeyMouseReader.KeyPressed(Keys.Right))
+            {
+                myPlayer.Character = "Pauline";
+            }
         }
 
         private void BackgroundMusic()
@@ -282,9 +302,9 @@ namespace Donkey_Kong
             if (KeyMouseReader.KeyPressed(Keys.Enter))
             {
                 EnemyManager.RemoveAll();
-                GameInfo.Initialize(1.2f, 1.2f, 6000);
+                GameInfo.Initialize(1.2f, 1.2f, 100, 6000);
 
-                myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 60), new Point(40), 3, 170.0f, 120.0f, 15.5f, -320.0f);
+                myPlayer = new Player(new Vector2(Window.ClientBounds.Width / 6, Window.ClientBounds.Height - 60), new Point(40), 3, 170.0f, 120.0f, 15.5f, -320.0f, 4.0f);
                 Level.LoadLevel(@"../../../../Levels/Level01.txt");
 
                 GameInfo.LoadHighScore(@"../../../../High-Score/High-Score.txt");

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/pauline.png</SourceFile>
-  <SourceTime>2019-10-27T15:00:13.0298551+01:00</SourceTime>
-  <DestFile>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/bin/Windows/Content/Sprites/pauline.xnb</DestFile>
-  <DestTime>2019-10-27T15:09:28.4341627+01:00</DestTime>
+  <SourceFile>C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/pauline.png</SourceFile>
+  <SourceTime>2019-10-28T14:13:13.9173431+01:00</SourceTime>
+  <DestFile>C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/bin/Windows/Content/Sprites/pauline.xnb</DestFile>
+  <DestTime>2019-10-28T14:13:46.8020563+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

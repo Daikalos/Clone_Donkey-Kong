@@ -92,7 +92,7 @@ namespace Donkey_Kong
 
             if (mySwitchDestTimer >= mySwitchDestTimerMax)
             {
-                if (aRNG.Next(0, 2) == 0)
+                if (aRNG.Next(0, 100) < 50)
                 {
                     MoveTo(aRNG, 1);
                     myFlipSprite = SpriteEffects.None;
@@ -140,7 +140,7 @@ namespace Donkey_Kong
         public void MoveTo(Random aRNG, int aDirection)
         {
             Tile tempTile = Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y));
-            for (int i = 1; i < aRNG.Next(0, 6) + 1; i++)
+            for (int i = 0; i < aRNG.Next(0, 6) + 1; i++)
             {
                 tempTile = Level.GetTileAtPos(new Vector2(
                     myBoundingBox.Center.X - (Level.TileSize.X * i * aDirection), 

@@ -13,7 +13,8 @@ namespace Donkey_Kong
         private static int 
             myScore,
             myDrawScore,
-            myBonusScore;
+            myBonusScore,
+            myReduceBonusAmount;
         private static float 
             myDSTimer,
             myDSTimerMax,
@@ -41,10 +42,11 @@ namespace Donkey_Kong
             get => myHighScores.Max();
         }
 
-        public static void Initialize(float aDSTimerMax, float aReduceBonusDelay, int aBonusScore)
+        public static void Initialize(float aDSTimerMax, float aReduceBonusDelay, int aReduceBonusAmount, int aBonusScore)
         {
             myDSTimerMax = aDSTimerMax;
             myReduceBonusMax = aReduceBonusDelay;
+            myReduceBonusAmount = aReduceBonusAmount;
             myBonusScore = aBonusScore;
 
             myDrawPos = Vector2.Zero;
@@ -69,7 +71,7 @@ namespace Donkey_Kong
             myReduceBonus += (float)aGameTime.ElapsedGameTime.TotalSeconds;
             if (myReduceBonus >= myReduceBonusMax)
             {
-                myBonusScore -= 100;
+                myBonusScore -= (int)myReduceBonusAmount;
                 myReduceBonus = 0;
             }
 

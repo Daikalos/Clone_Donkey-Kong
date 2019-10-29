@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/mario_climbing.png</SourceFile>
-  <SourceTime>2019-10-28T10:27:15.4111496+01:00</SourceTime>
-  <DestFile>C:/Users/Tobias/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/bin/Windows/Content/Sprites/mario_climbing.xnb</DestFile>
-  <DestTime>2019-10-28T10:43:11.9665684+01:00</DestTime>
+  <SourceFile>C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/Sprites/mario_climbing.png</SourceFile>
+  <SourceTime>2019-10-28T13:00:57.2321746+01:00</SourceTime>
+  <DestFile>C:/Users/tobia/Documents/GitHub/Donkey_Kong/Donkey_Kong/Donkey_Kong/Content/bin/Windows/Content/Sprites/mario_climbing.xnb</DestFile>
+  <DestTime>2019-10-28T13:02:54.6235818+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

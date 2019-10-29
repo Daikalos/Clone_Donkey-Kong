@@ -44,13 +44,16 @@ namespace Donkey_Kong
             myVelocity,
             myGravity,
             myJumpHeight,
-            myInvincibilityFrames;
+            myInvincibilityFrames,
+            myHammerTimer,
+            myHammerTimerMax;
         private bool
             myIsMoving,
             myIsClimbing,
             myJumpAvailable,
             myIsUsingHammer,
             myIsDead;
+        private string myCharacter;
 
         public Texture2D MarioHPTexture
         {
@@ -73,8 +76,13 @@ namespace Donkey_Kong
         {
             get => myIsDead;
         }
+        public string Character
+        {
+            get => myCharacter;
+            set => myCharacter = value;
+        }
 
-        public Player(Vector2 aPosition, Point aSize, int aHealth, float aSpeed, float aClimbSpeed, float aGravity, float aJumpHeight)
+        public Player(Vector2 aPosition, Point aSize, int aHealth, float aSpeed, float aClimbSpeed, float aGravity, float aJumpHeight, float aHammerTimer)
         {
             this.myPosition = aPosition;
             this.mySize = aSize;
@@ -83,6 +91,7 @@ namespace Donkey_Kong
             this.myClimbSpeed = aClimbSpeed;
             this.myGravity = aGravity;
             this.myJumpHeight = aJumpHeight;
+            this.myHammerTimerMax = aHammerTimer;
 
             this.myIsMoving = false;
             this.myJumpAvailable = true;
@@ -96,6 +105,7 @@ namespace Donkey_Kong
             this.myPlayerColor = Color.White;
             this.myMarioHPTexture = ResourceManager.RequestTexture("Mario_Lives");
             this.myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
+            this.myCharacter = "Mario";
         }
 
         public void Update(GameWindow aWindow, GameTime aGameTime)
@@ -120,6 +130,13 @@ namespace Donkey_Kong
                     break;
                 case PlayerState.isUsingHammer:
                     Movement(aWindow, aGameTime);
+                    myHammerTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    if (myHammerTimer <= 0)
+                    {
+                        myIsUsingHammer = false;
+                        SetTexture(myCharacter + "_Walking");
+                        myPlayerState = PlayerState.isWalking;
+                    }
                     break;
                 case PlayerState.isDead:
                     break;
@@ -137,7 +154,7 @@ namespace Donkey_Kong
                 case PlayerState.isWalking:
                     if (myIsMoving)
                     {
-                        myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition,
+                        myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, Vector2.Zero,
                             new Point(myTexture.Width / 3, myTexture.Height), mySize, myPlayerColor, myFlipSprite);
                     }
                     else
@@ -149,7 +166,8 @@ namespace Donkey_Kong
                 case PlayerState.isClimbing:
                     if (myIsClimbing)
                     {
-                        myClimbingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, new Point(myTexture.Width / 2, myTexture.Height), mySize, myPlayerColor, SpriteEffects.None);
+                        myClimbingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, Vector2.Zero, 
+                            new Point(myTexture.Width / 2, myTexture.Height), mySize, myPlayerColor, SpriteEffects.None);
                     }
                     else
                     {
@@ -163,8 +181,12 @@ namespace Donkey_Kong
                 case PlayerState.isFalling:
                     aSpriteBatch.Draw(myTexture, myBoundingBox, null, myPlayerColor, 0.0f, Vector2.Zero, myFlipSprite, 0.0f);
                     break;
+                case PlayerState.isUsingHammer:
+                    myHammerAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, new Vector2(0, myTexture.Height / 2), 
+                        new Point(myTexture.Width / 4, myTexture.Height), new Point(mySize.X * 2, mySize.Y * 2), myPlayerColor, myFlipSprite);
+                    break;
                 case PlayerState.isDead:
-                    myDeathAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition,
+                    myDeathAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, Vector2.Zero,
                         new Point(myTexture.Width / 5, myTexture.Height / 2), mySize, Color.White, SpriteEffects.None);
                     break;
             }
@@ -230,7 +252,7 @@ namespace Donkey_Kong
                     }
                 }
 
-                SetTexture("Mario_Jumping");
+                SetTexture(myCharacter + "_Jumping");
             }
         }
         private void Climbing(GameTime aGameTime)
@@ -302,7 +324,7 @@ namespace Donkey_Kong
                 }
 
                 myPlayerState = PlayerState.isDead;
-                SetTexture("Mario_Death");
+                SetTexture(myCharacter + "_Death");
             }
         }
         public void TakeDamage()
@@ -316,7 +338,7 @@ namespace Donkey_Kong
         }
         public void LevelFinished()
         {
-            SetTexture("Mario_Walking");
+            SetTexture(myCharacter + "_Walking");
             myFlipSprite = SpriteEffects.FlipHorizontally;
             myPlayerColor = Color.White;
             myPlayerState = PlayerState.isWalking;
@@ -342,7 +364,7 @@ namespace Donkey_Kong
                     myPosition.X = tempTile.Position.X;
 
                     myPlayerState = PlayerState.isFalling;
-                    SetTexture("Mario_Jumping");
+                    SetTexture(myCharacter + "_Jumping");
 
                     ResourceManager.StopSound("Walking");
                 }
@@ -360,15 +382,24 @@ namespace Donkey_Kong
                     myPosition.Y = tempTile.BoundingBox.Y - mySize.Y;
                     myJumpAvailable = true;
 
-                    ResourceManager.StopSound("Jump");
-                    myPlayerState = PlayerState.isWalking;
-                    SetTexture("Mario_Walking");
+                    if (!myIsUsingHammer)
+                    {
+                        ResourceManager.StopSound("Jump");
+                        myPlayerState = PlayerState.isWalking;
+                        SetTexture(myCharacter + "_Walking");
+                    }
+                    else if (myPlayerState != PlayerState.isUsingHammer)
+                    {
+                        myHammerTimer = myHammerTimerMax;
+                        SetTexture("Mario_Hammer");
+                        myPlayerState = PlayerState.isUsingHammer;
+                    }
                 }
             }
         }
         private void CollisionLadder()
         {
-            if (!myIsMoving)
+            if (!myIsMoving && !myIsUsingHammer)
             {
                 if (myPlayerState != PlayerState.isClimbing)
                 {
@@ -377,7 +408,7 @@ namespace Donkey_Kong
                         if (KeyMouseReader.KeyHold(Keys.Up))
                         {
                             myPlayerState = PlayerState.isClimbing;
-                            SetTexture("Mario_Climbing");
+                            SetTexture(myCharacter + "_Climbing");
                         }
                     }
                     if (Level.GetTileAtPos(new Vector2(myBoundingBox.Center.X, myBoundingBox.Center.Y + Level.TileSize.Y)).TileType == '%')
@@ -385,7 +416,7 @@ namespace Donkey_Kong
                         if (KeyMouseReader.KeyHold(Keys.Down))
                         {
                             myPlayerState = PlayerState.isClimbing;
-                            SetTexture("Mario_Climbing");
+                            SetTexture(myCharacter + "_Climbing");
                         }
                     }
                 }
@@ -401,7 +432,7 @@ namespace Donkey_Kong
                             myIsClimbing = false;
 
                             myPlayerState = PlayerState.isWalking;
-                            SetTexture("Mario_Walking");
+                            SetTexture(myCharacter + "_Walking");
                         }
                     }
                 }
@@ -438,9 +469,8 @@ namespace Donkey_Kong
                 tempTile.TileType = '.';
                 tempTile.SetTexture();
 
-                SetTexture("Mario_Hammer");
                 ResourceManager.PlaySound("Item_Get");
-                myPlayerState = PlayerState.isUsingHammer;
+                myIsUsingHammer = true;
             }
         }
         private void CollisionEnemy()
